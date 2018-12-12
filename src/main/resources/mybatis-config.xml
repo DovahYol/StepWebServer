@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias alias="User" type="com.step.webServer.domain.ApplicationUser"/>
+        <package name="com.step.webServer.domain"/>
+    </typeAliases>
+    <mappers>
+        <mapper resource="com/step/webServer/mapper/PatientMapper.xml"/>
+        <mapper resource="com/step/webServer/mapper/RoleMapper.xml"/>
+        <mapper resource="com/step/webServer/mapper/UserMapper.xml"/>
+        <mapper resource="com/step/webServer/mapper/Mapper.xml"/>
+        <mapper resource="com/step/webServer/mapper/HHospitalMapper.xml"/>
+        <!--<mapper resource="com/step/webServer/mapper/"/>-->
+    </mappers>
+</configuration>

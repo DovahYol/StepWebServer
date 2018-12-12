@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.step.webServer.mapper.RoleMapper">
+    <cache-ref namespace="com.step.webServer.mapper" />
+    <select id="selectAllEmployees" resultType="Role">
+        select * from role where role_type = 'employee'
+    </select>
+    <insert id="insertOneRole">
+        insert into role(role_id, role_name, role_type) values (#{roleId}, #{roleName}, #{roleType})
+    </insert>
+</mapper>
