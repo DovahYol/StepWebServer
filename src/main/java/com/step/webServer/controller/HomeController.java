@@ -26,7 +26,7 @@ public class HomeController extends AbstractController{
 
     @GetMapping()
     @Transactional
-    public Object home() throws JsonProcessingException {
+    public Object home() {
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         int numPatients = patientDao.numPatientsByUsername(username);
         int numNewPatients = patientDao.numNewPatientsByUsername(username);

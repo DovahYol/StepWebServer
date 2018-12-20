@@ -2,6 +2,7 @@ package com.step.webServer.service;
 
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.ApplicationUser;
+import com.step.webServer.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service("default")
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class DefaultUserDetailsService implements UserDetailsService {
 
     private UserDao userDao;
 
@@ -28,10 +29,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (appUser == null) {
             throw new UsernameNotFoundException(username);
         }
-        if (!Integer.valueOf(1).equals(appUser.getConfirmed())) {
-            return new User(username, appUser.getPassword(), Arrays.asList(() -> "尚未审核通过"));
-        }
-        else return new User(username, appUser.getPassword(), new ArrayList<>());
+        boolean enabled = appUser.getConfirmed() != null && appUser.getConfirmed() == 1;
+        return new UserPrincipal(appUser.getUsername(),appUser.getPassword(), enabled);
     }
 
 }

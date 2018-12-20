@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
+import org.springframework.session.web.http.HttpSessionIdResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import java.util.concurrent.Executor;
@@ -28,6 +30,11 @@ public class WebServerApplication extends WebMvcConfigurationSupport {
 		executor.setThreadNamePrefix("AsyncMethod-");
 		executor.initialize();
 		return executor;
+	}
+
+	@Bean
+	public HttpSessionIdResolver httpSessionIdResolver() {
+		return HeaderHttpSessionIdResolver.xAuthToken();
 	}
 
 	public static void main(String[] args) {

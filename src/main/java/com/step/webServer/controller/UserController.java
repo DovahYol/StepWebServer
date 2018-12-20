@@ -1,8 +1,8 @@
 package com.step.webServer.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.step.webServer.dao.UserDao;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.step.webServer.security.UserPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,10 +21,9 @@ public class UserController extends AbstractController{
     }
 
     @GetMapping("/mySidebar")
-    public Object getMySidebar() throws JsonProcessingException {
-        String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public Object getMySidebar(Authentication authentication) {
         Map<String, Object> map = new HashMap<>();
-        List<String> sideBar = userDao.getSidebarByUsername(username);
+        List<String> sideBar = userDao.getSidebarByUsername(((UserPrincipal)authentication.getPrincipal()).getUsername());
         map.put("sections", sideBar);
         responseBuilder.setMap(map);
         return responseBuilder.getJson();
