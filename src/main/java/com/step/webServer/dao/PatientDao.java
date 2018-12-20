@@ -2,14 +2,23 @@ package com.step.webServer.dao;
 
 import com.github.pagehelper.PageHelper;
 import com.step.webServer.domain.Patient;
+import com.step.webServer.util.MapFactory;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class PatientDao implements Dao{
     private final SqlSession sqlSession;
+    private MapFactory<String, Object> mapFactory;
+
+    @Autowired
+    public void setMapFactory(MapFactory<String, Object> mapFactory) {
+        this.mapFactory = mapFactory;
+    }
 
     public PatientDao(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
@@ -31,11 +40,27 @@ public class PatientDao implements Dao{
         return (int)sqlSession.selectList("numNewPatientsNotTestedByUsername", username).get(0);
     }
 
-    public List<Patient> selectAllPatients(String username, int pageNum, int pageSize, String orderBy){
-        PageHelper.startPage(pageNum, pageSize, orderBy);
-        List<Patient> patients = sqlSession.selectList("selectAllPatients", username);
+    public List<Map<String, Object>> selectAllPatients(int pageNum, int pageSize, String orderBy, Map<String, Object> parameter){
+        if (orderBy != null) {
+            PageHelper.startPage(pageNum, pageSize, orderBy);
+        }
+        else {
+            PageHelper.startPage(pageNum, pageSize);
+        }
+
+        List<Map<String, Object>> patients = sqlSession.selectList("selectAllPatients", parameter);
+        for (int i = 0; i < patients.size(); i++) {
+            patients.get(i).put("no", i + 1);
+        }
         return patients;
     }
 
+    public boolean hasPatient(String patientName) {
+        return this.sqlSession.<Integer>selectOne("selectPatientId", patientName) != null;
+    }
+
+    public int insertPatient(Patient patient) {
+        return this.sqlSession.insert("insertPatient", patient);
+    }
 
 }

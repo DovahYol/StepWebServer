@@ -1,6 +1,5 @@
 package com.step.webServer.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.step.webServer.dao.HospitalDao;
 import com.step.webServer.domain.Hospital;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,7 @@ public class HospitalController extends AbstractController{
     }
 
     @GetMapping()
-    public Object getAll() throws JsonProcessingException {
+    public Object getAll() {
         Map<String, Object> map = new HashMap<>();
         map.put("hospitals", hospitalDao.selectAll());
         responseBuilder.setMap(map);
@@ -27,7 +26,7 @@ public class HospitalController extends AbstractController{
     }
 
     @PostMapping(value = "/insertOne", consumes = "application/json")
-    public Object insertOne(@RequestBody Hospital hospital) throws JsonProcessingException {
+    public Object insertOne(@RequestBody Hospital hospital) {
         hospitalDao.insertOne(hospital);
         return responseBuilder.getJson();
     }

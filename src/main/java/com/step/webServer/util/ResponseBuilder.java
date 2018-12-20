@@ -46,8 +46,12 @@ public class ResponseBuilder {
     }
 
     @JsonIgnore
-    public String getJson() throws JsonProcessingException {
-        return objectMapper.writerFor(ResponseBuilder.class).writeValueAsString(this);
+    public String getJson(){
+        try {
+            return objectMapper.writerFor(ResponseBuilder.class).writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

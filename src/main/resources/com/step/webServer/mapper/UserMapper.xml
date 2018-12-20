@@ -16,6 +16,12 @@
     <select id="selectByUsername" resultType="User">
         select * from user where username = #{username}
     </select>
+    <select id="selectUserIdByUsername" resultType="int">
+        select user_id from user where username = #{username}
+    </select>
+    <select id="selectTeamIdByUsername" resultType="int">
+        select team_id from user where username = #{username}
+    </select>
     <insert id="insertOne">
         insert into user
           (username,

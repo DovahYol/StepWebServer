@@ -1,15 +1,10 @@
-package com.step.webServer.domain;
+package com.step.webServer.model;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-public class Patient implements Domain {
-    private Integer patientId;
+public class PatientAddingModel {
     private String patientName;
-    private LocalDateTime createDatetime;
     private String gender;
     private String prcId;
-    private LocalDate birthday;
+    private String birthday;
     private Integer age;
     private String marriage;
     private String ethnicity;
@@ -17,27 +12,10 @@ public class Patient implements Domain {
     private String profession;
     private String address;
     private String phoneNo;
-    private Integer medicalInsuranceTypeId;
+    private String medicalInsuranceTypeId;
     private String emergContName;
     private String emergContPhoneNo;
     private String emergContRelationship;
-    private Integer teamId;
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public Integer getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(Integer patientId) {
-        this.patientId = patientId;
-    }
 
     public String getPatientName() {
         return patientName;
@@ -45,14 +23,6 @@ public class Patient implements Domain {
 
     public void setPatientName(String patientName) {
         this.patientName = patientName;
-    }
-
-    public LocalDateTime getCreateDatetime() {
-        return createDatetime;
-    }
-
-    public void setCreateDatetime(LocalDateTime createDatetime) {
-        this.createDatetime = createDatetime;
     }
 
     public String getGender() {
@@ -71,12 +41,20 @@ public class Patient implements Domain {
         this.prcId = prcId;
     }
 
-    public LocalDate getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public String getMarriage() {
@@ -127,11 +105,11 @@ public class Patient implements Domain {
         this.phoneNo = phoneNo;
     }
 
-    public Integer getMedicalInsuranceTypeId() {
+    public String getMedicalInsuranceTypeId() {
         return medicalInsuranceTypeId;
     }
 
-    public void setMedicalInsuranceTypeId(Integer medicalInsuranceTypeId) {
+    public void setMedicalInsuranceTypeId(String medicalInsuranceTypeId) {
         this.medicalInsuranceTypeId = medicalInsuranceTypeId;
     }
 
@@ -157,13 +135,5 @@ public class Patient implements Domain {
 
     public void setEmergContRelationship(String emergContRelationship) {
         this.emergContRelationship = emergContRelationship;
-    }
-
-    public Integer getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(Integer teamId) {
-        this.teamId = teamId;
     }
 }

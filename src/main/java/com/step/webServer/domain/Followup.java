@@ -1,10 +1,10 @@
 package com.step.webServer.domain;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Followup  implements Domain{
     private Integer followupId;
-    private LocalDateTime createDatetime;
+    private LocalDate createDate;
     private String complaint;
     private String historyPresentIllness;
     private String historyPastIllness;
@@ -37,12 +37,12 @@ public class Followup  implements Domain{
         this.followupId = followupId;
     }
 
-    public LocalDateTime getCreateDatetime() {
-        return createDatetime;
+    public LocalDate getCreateDate() {
+        return createDate;
     }
 
-    public void setCreateDatetime(LocalDateTime createDatetime) {
-        this.createDatetime = createDatetime;
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
     }
 
     public String getComplaint() {

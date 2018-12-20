@@ -2,8 +2,6 @@ package com.step.webServer.util;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
 @JsonPropertyOrder
 public class ResponseError {
@@ -19,8 +17,7 @@ public class ResponseError {
         try {
             return JsonUtil.defaultPrettyPrinter().writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;//Never reach here.
     }
 }

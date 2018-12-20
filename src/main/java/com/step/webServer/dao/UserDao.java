@@ -25,4 +25,12 @@ public class UserDao implements Dao{
     public int insertOne(ApplicationUser user) {
         return this.sqlSession.insert("insertOne", user);
     }
+
+    public boolean containsUser(String username) {
+        return this.sqlSession.selectList("selectUserIdByUsername", username).size() != 0;
+    }
+
+    public Integer selectTeamIdByUsername(String username) {
+        return this.sqlSession.selectOne("selectTeamIdByUsername", username);
+    }
 }

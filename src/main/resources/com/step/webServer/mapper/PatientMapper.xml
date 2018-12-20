@@ -47,11 +47,43 @@
                         where bprecord.create_datetime > DATE_SUB(NOW(), INTERVAL 3 DAY )
                         and patient.patient_id = bprecord.patient_id)
     </select>
-    <select id="selectAllPatients">
-        select patient.*
-        from user, patient
-        where user.team_id = patient.team_id
-          and user.username = #{username}
+    <sql id="latestHomeBp">
+        select bprecord.patient_id, concat(sbp, '/', dbp) as latest_home_bp
+        from bprecord inner join (select max(create_datetime) as max_datetime, patient_id
+                                  from bprecord
+                                  group by patient_id) as latest_bprecord
+        on create_datetime = max_datetime and
+          bprecord.patient_id = latest_bprecord.patient_id
+    </sql>
+    <select id="selectAllPatients" resultType="map">
+        select patient.patient_id, patient_name, patient.gender, patient.age, latest_home_bp
+        from patient
+          inner join user using (team_id)
+          left join (<include refid="latestHomeBp"/>) as A using (patient_id)
+        where user.username = #{username}
+          <if test="keyword != null and keyword != ''">
+              and (
+              patient_name like concat('%', #{keyword}, '%')
+              or patient.phone_no like concat('%', #{keyword}, '%')
+              or patient.prc_id like concat('%',#{keyword}, '%')
+              )
+          </if>
     </select>
+    <select id="selectPatientId" resultType="int">
+        select patient_id from patient
+        where patient_name = #{patientName}
+    </select>
+    <insert id="insertPatient">
+        insert into patient
+          (patient_name, create_datetime, gender, prc_id, birthday,
+           marriage, ethnicity, degree_education, profession, address,
+           phone_no, medical_insurance_type_id, emerg_cont_name,
+           emerg_cont_phone_no, emerg_cont_relationship, team_id, age)
+           values (#{patientName}, #{createDatetime}, #{gender}, #{prcId}, #{birthday},
+                   #{marriage}, #{ethnicity}, #{degreeEducation}, #{profession}, #{address},
+                   #{phoneNo}, #{medicalInsuranceTypeId}, #{emergContName},
+                   #{emergContPhoneNo}, #{emergContRelationship}, #{teamId}, #{age}
+                   )
+    </insert>
 
 </mapper>
