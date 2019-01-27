@@ -18,18 +18,18 @@
       and patient.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
     </select>
     <sql id="bpTarget">
-        select B.create_datetime, B.patient_id, sbp_target, dbp_target
-        from (select max(create_datetime) as create_datetime, patient_id
+        select B.create_date, B.patient_id, sbp_target, dbp_target
+        from (select max(create_date) as create_date, patient_id
               from followup group by patient_id) as A,
              followup as B
-        where A.patient_id = B.patient_id and A.create_datetime = B.create_datetime
+        where A.patient_id = B.patient_id and A.create_date = B.create_date
     </sql>
     <select id="numPatientsWithInvalidBpByUsername" resultType="java.lang.Integer">
         select count(distinct bprecord.patient_id) from bprecord,
                                                         (<include refid="bpTarget"/>) as C,
                                                         user,
                                                         patient
-        where bprecord.create_datetime > C.create_datetime
+        where bprecord.create_datetime > C.create_date
         and bprecord.patient_id = C.patient_id
         and (bprecord.dbp > C.dbp_target
                or

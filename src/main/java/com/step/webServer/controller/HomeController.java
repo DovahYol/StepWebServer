@@ -3,6 +3,7 @@ package com.step.webServer.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.step.webServer.dao.PatientDao;
 import com.step.webServer.model.NameValueModel;
+import com.step.webServer.security.UserPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,8 @@ public class HomeController extends AbstractController{
     @GetMapping()
     @Transactional
     public Object home() {
-        String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userPrincipal.getUsername();
         int numPatients = patientDao.numPatientsByUsername(username);
         int numNewPatients = patientDao.numNewPatientsByUsername(username);
         int numPatientsWithInvalidBp = patientDao.numPatientsWithInvalidBpByUsername(username);

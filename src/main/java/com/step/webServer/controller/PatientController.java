@@ -69,6 +69,7 @@ public class PatientController extends AbstractController{
         List<Map<String, Object>> patients = patientDao.selectAllPatients(pageNum, pageSize, orderBy, map);
         Map<String, Object> responseMap = mapFactory.create();
         responseMap.put("patients", patients);
+        responseBuilder.setMap(responseMap);
         return responseBuilder.getJson();
     }
 

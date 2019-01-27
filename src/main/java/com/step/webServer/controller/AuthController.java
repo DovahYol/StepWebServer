@@ -8,9 +8,7 @@ import com.step.webServer.util.ResponseError;
 import com.step.webServer.util.ResponseErrorFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -30,6 +28,17 @@ public class AuthController extends AbstractController{
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.fileService = fileService;
         this.responseErrorFactory = responseErrorFactory;
+    }
+
+    @PostMapping("/login?error")
+    public Object login(String error) {
+        return responseBuilder.getJson();
+    }
+
+
+    @GetMapping("/")
+    public Object root() {
+        return responseBuilder.getJson();
     }
 
     @PostMapping("/signup")
