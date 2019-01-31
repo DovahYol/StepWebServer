@@ -12,6 +12,10 @@
     - GET /home
     - GET /patient
     - GET /medicalInsuranceType
+    - GET /patient/meta
+        - return mock data
+    - GET /patient/overview
+        - return mock data
     - POST /patient/add
     - POST /hospital/insertOne
     - POST /logout

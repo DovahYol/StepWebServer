@@ -85,5 +85,12 @@
                    #{emergContPhoneNo}, #{emergContRelationship}, #{teamId}, #{age}
                    )
     </insert>
+    <select id="patientMeta" resultType="map">
+        select patient_name, gender, age, '' as diagnose from step.patient
+        where patient_id = #{patientId}
+    </select>
+    <select id="patientOverview" resultType="map">
+        select '' as bp_level, '' as risk_level, '已达标' as is_valid, '' as bp_period, '' as step, '' as follow_up_datetime, '' as current_mgt_plan
+    </select>
 
 </mapper>

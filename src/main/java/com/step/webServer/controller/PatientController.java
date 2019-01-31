@@ -136,4 +136,17 @@ public class PatientController extends AbstractController{
         patientDao.insertPatient(patient);
         return responseBuilder.getJson();
     }
+
+
+    @GetMapping("/meta")
+    public Object getMeta(String patientId) {
+        responseBuilder.setMap(patientDao.getPatientMeta(patientId));
+        return responseBuilder.getJson();
+    }
+
+    @GetMapping("/overview")
+    public Object getOverview(String patientId) {
+        responseBuilder.setMap(patientDao.getPatientOverview());
+        return responseBuilder.getJson();
+    }
 }

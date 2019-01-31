@@ -63,4 +63,12 @@ public class PatientDao implements Dao{
         return this.sqlSession.insert("insertPatient", patient);
     }
 
+    public Map<String, Object> getPatientMeta(String patientId) {
+        return this.sqlSession.selectOne("patientMeta", patientId);
+    }
+
+    public Map<String, Object> getPatientOverview() {
+        return this.sqlSession.selectOne("patientOverview");
+    }
+
 }
