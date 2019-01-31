@@ -11,6 +11,7 @@
     - GET /user/mySidebar
     - GET /home
     - GET /patient
+    - GET /medicalInsuranceType
     - POST /patient/add
     - POST /hospital/insertOne
     - POST /logout
