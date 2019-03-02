@@ -1,6 +1,7 @@
 package com.step.webServer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.step.webServer.dao.BprecordDao;
 import com.step.webServer.dao.PatientDao;
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.Patient;
@@ -28,6 +29,7 @@ import java.util.Map;
 public class PatientController extends AbstractController{
     private final PatientDao patientDao;
     private final UserDao userDao;
+    private final BprecordDao bprecordDao;
     private MapFactory<String, Object> mapFactory;
     private ResponseErrorFactory responseErrorFactory;
 
@@ -41,9 +43,10 @@ public class PatientController extends AbstractController{
         this.responseErrorFactory = responseErrorFactory;
     }
 
-    public PatientController(PatientDao patientDao, UserDao userDao) {
+    public PatientController(PatientDao patientDao, UserDao userDao, BprecordDao bprecordDao) {
         this.patientDao = patientDao;
         this.userDao = userDao;
+        this.bprecordDao = bprecordDao;
     }
 
     @GetMapping
@@ -147,6 +150,17 @@ public class PatientController extends AbstractController{
     @GetMapping("/overview")
     public Object getOverview(String patientId) {
         responseBuilder.setMap(patientDao.getPatientOverview());
+        return responseBuilder.getJson();
+    }
+
+    //未达标次数（numInvalid），达标率（validRate）未实现
+    @GetMapping("/bpAnalysis")
+    public Object getBpAnalysis(String patientId) {
+        Map<String, Object> map =bprecordDao.bpOverview(patientId);
+        map.put("numInvalid", 5);
+        map.put("validRate", "87%");
+        map.put("bpRecords", bprecordDao.bpRecords(patientId));
+        responseBuilder.setMap(map);
         return responseBuilder.getJson();
     }
 }

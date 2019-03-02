@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.step.webServer.mapper.BprecordMapper">
+    <cache-ref namespace="com.step.webServer.mapper" />
+    <select id="bpRecords" resultType="map">
+        select create_datetime, sbp | dbp as bp, map, pulse_rate, meas_state, symptom
+        from step.bprecord
+        where patient_id = #{patientId}
+    </select>
+    <select id="bpOverview" resultType="map">
+        select DATEDIFF(max(create_datetime), min(create_datetime)) as num_meas_date,
+               count(*) as num_meas,
+               max(sbp) as max_sbp,
+               avg(sbp) as mean_sbp,
+               max(dbp) as max_dbp,
+               avg(dbp) as mean_dbp
+        from step.bprecord
+        where patient_id = #{patientId}
+    </select>
+</mapper>

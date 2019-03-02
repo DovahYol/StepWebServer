@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.step.webServer.mapper.FollowupMapper">
+    <cache-ref namespace="com.step.webServer.mapper" />
+    <select id="followup" resultType="followup">
+        select * from step.followup
+        where patient_id = #{patientId}
+        and create_date = #{createDate}
+        and user_id = #{userId}
+    </select>
+    <update id="updateSingleFollowup">
+        update step.followup
+        set create_date = #{createDate},
+            complaint = #{complaint},
+            history_present_illness = #{historyPresentIllness},
+            history_past_illness = #{historyPastIllness},
+            personal_history = #{personalHistory},
+            allergic_history = #{allergicHistory},
+            family_history = #{familyHistory},
+            height = #{height},
+            weight = #{weight},
+            sbp = #{sbp},
+            dbp = #{dbp},
+            meanbp = #{meanbp},
+            heart_rate = #{heartRate},
+            body_temp = #{bodyTemp},
+            breathe = #{breathe},
+            blood_sugar = #{bloodSugar},
+            phys_exam = #{physExam},
+            lab_exam = #{labExam},
+            sbp_target = #{sbpTarget},
+            dbp_target = #{dbpTarget},
+            medicine_rx = #{medicineRx},
+            is_referral = #{isReferral},
+            patient_id = #{patientId},
+            user_id = #{userId}
+        where followup_id = #{followupId}
+    </update>
+    <insert id="insertSingleFollowup">
+        insert into step.followup
+          (create_date,
+           complaint,
+           history_present_illness,
+           history_past_illness,
+           personal_history,
+           allergic_history,
+           family_history,
+           height,
+           weight,
+           sbp,
+           dbp,
+           meanbp,
+           heart_rate,
+           body_temp,
+           breathe,
+           blood_sugar,
+           phys_exam,
+           lab_exam,
+           sbp_target,
+           dbp_target,
+           medicine_rx,
+           is_referral,
+           patient_id,
+           user_id
+           )
+        values (
+             #{createDate},
+             #{complaint},
+             #{historyPresentIllness},
+             #{historyPastIllness},
+             #{personalHistory},
+             #{allergicHistory},
+             #{familyHistory},
+             #{height},
+             #{weight},
+             #{sbp},
+             #{dbp},
+             #{meanbp},
+             #{heartRate},
+             #{bodyTemp},
+             #{breathe},
+             #{bloodSugar},
+             #{physExam},
+             #{labExam},
+             #{sbpTarget},
+             #{dbpTarget},
+             #{medicineRx},
+             #{isReferral},
+             #{patientId},
+             #{userId}
+             )
+    </insert>
+    <select id="medicalRecord" resultType="map">
+        select
+               complaint,
+               history_present_illness,
+               history_past_illness,
+               personal_history,
+               allergic_history,
+               family_history
+        from step.followup
+        where patient_id = #{patientId}
+          and create_date = #{createDate}
+          and user_id = #{userId}
+    </select>
+    <select id="exam" resultType="map">
+        select
+               height,
+               weight,
+               sbp,
+               dbp,
+               meanbp,
+               heart_rate,
+               body_temp,
+               breathe,
+               blood_sugar,
+               phys_exam,
+               lab_exam
+        from step.followup
+        where patient_id = #{patientId}
+          and create_date = #{createDate}
+          and user_id = #{userId}
+    </select>
+</mapper>

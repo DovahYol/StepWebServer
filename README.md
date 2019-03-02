@@ -1,5 +1,5 @@
-# UNDER CONSTRUCTION
-> By now the following endpoints' been implemented：
+# 施工中（随时更新进度）
+> 下列为以实现的路由：
 
 1. Nontrivial
     - POST /signup
@@ -13,9 +13,26 @@
     - GET /patient
     - GET /medicalInsuranceType
     - GET /patient/meta
-        - return mock data
+        - 返回mock data
     - GET /patient/overview
-        - return mock data
+        - 返回mock data
     - POST /patient/add
     - POST /hospital/insertOne
     - POST /logout
+    - GET /patient/bpAnalysis
+        - 未达标次数（numInvalid），达标率（validRate）未实现
+        - awaiting test
+    - GET /followUp/medicalRecord
+        - awaiting test
+    - PUT /followUp/medicalRecord
+        - awaiting test
+    - GET /template/
+        - awaiting test
+    - DELETE /template/delete
+        - awaiting test
+    - POST /template/add
+        - awaiting test
+    - GET /followUp/exam
+        - awaiting test
+    
+    

@@ -17,6 +17,9 @@
         <mapper resource="com/step/webServer/mapper/Mapper.xml"/>
         <mapper resource="com/step/webServer/mapper/HHospitalMapper.xml"/>
         <mapper resource="com/step/webServer/mapper/MedicalInsuranceTypeMapper.xml"/>
+        <mapper resource="com/step/webServer/mapper/BprecordMapper.xml"/>
+        <mapper resource="com/step/webServer/mapper/FollowupMapper.xml"/>
+        <mapper resource="com/step/webServer/mapper/TemplateMapper.xml"/>
         <!--<mapper resource="com/step/webServer/mapper/"/>-->
     </mappers>
 </configuration>

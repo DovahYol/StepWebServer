@@ -13,12 +13,6 @@ import java.util.Map;
 @Component
 public class PatientDao implements Dao{
     private final SqlSession sqlSession;
-    private MapFactory<String, Object> mapFactory;
-
-    @Autowired
-    public void setMapFactory(MapFactory<String, Object> mapFactory) {
-        this.mapFactory = mapFactory;
-    }
 
     public PatientDao(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
