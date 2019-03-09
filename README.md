@@ -34,5 +34,28 @@
         - awaiting test
     - GET /followUp/exam
         - awaiting test
+    - PUT /followUp/exam
+        - awaiting test
+    - GET /followUp/riskfactorclass
+        - awaiting test
+    - GET /followUp/riskfactor
+        - awaiting test
+    - PUT /followUp/riskfactor
+        - awaiting test
+    - GET /followUp/cvRisk
+        - 返回mock data
+    - GET /followUp/mgtPlan
+        - awaiting test
+    - GET /followUp/practicerx
+        - awaiting test
+    - PUT /followUp/mgtPlan
+        - awaiting test
+    - PUT /followUp/practicerx
+        - awaiting test
+    - GET /followUp/allDateAndFollowupIds
+        - awaiting test
+    
+    
+    
     
     

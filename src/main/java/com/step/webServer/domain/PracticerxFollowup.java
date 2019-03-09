@@ -4,6 +4,7 @@ public class PracticerxFollowup implements Domain {
     private Integer practicerxId;
     private Integer followupId;
     private String note;
+    private Boolean checked;
 
     public Integer getPracticerxId() {
         return practicerxId;
@@ -27,5 +28,13 @@ public class PracticerxFollowup implements Domain {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
     }
 }

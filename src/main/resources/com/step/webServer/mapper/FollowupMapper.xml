@@ -101,9 +101,7 @@
                allergic_history,
                family_history
         from step.followup
-        where patient_id = #{patientId}
-          and create_date = #{createDate}
-          and user_id = #{userId}
+        where followup_id = #{followupId}
     </select>
     <select id="exam" resultType="map">
         select
@@ -119,8 +117,92 @@
                phys_exam,
                lab_exam
         from step.followup
+        where followup_id = #{followupId}
+    </select>
+    <select id="riskfactorclass" resultType="map">
+        select
+               riskfactorclass_id,
+               riskfactorclass_name
+        from step.riskfactorclass
+    </select>
+    <select id="riskfactor" resultType="map">
+        select
+               A.riskfactor_id,
+               A.riskfactor_name,
+               B.checked
+        from step.riskfactor AS A
+          left join step.riskfactor_followup AS B on A.riskfactor_id = B.riskfactor_id
+        where A.riskfactorclass_id = #{riskfactorclassId}
+        and B.followup_id = #{followupId}
+    </select>
+    <select id="riskfactorFollowup" resultType="riskfactorFollowup">
+        select *
+        from
+             step.riskfactor_followup
+        where riskfactor_id = #{riskfactorId}
+        and followup_id = #{followupId}
+    </select>
+    <insert id="insertRiskfactorFollowup">
+        insert into
+          step.riskfactor_followup
+                  (riskfactor_id,
+                   followup_id,
+                   checked)
+          values
+                 (#{riskfactorId},
+                  #{followupId},
+                  #{checked})
+    </insert>
+    <update id="updateRiskfactorFollowup">
+        update step.riskfactor_followup
+        set checked = #{checked}
+        where riskfactor_id = #{riskfactorId}
+        and followup_id = #{followupId}
+    </update>
+    <select id="mgtPlan" resultType="map">
+        select
+               sbp_target,
+               dbp_target,
+               medicine_rx,
+               is_referral,
+               next_datetime
+        from step.followup
+        where followup_id = #{followupId}
+    </select>
+    <select id="practicerx" resultType="map">
+        select
+               A.practicerx_id,
+               A.practicerx_name,
+               B.checked,
+               B.note
+        from step.practicerx AS A left join step.practicerx_followup AS B
+        on A.practicerx_id = B.practicerx_id
+        where B.followup_id = #{followupId}
+    </select>
+    <select id="practicerxFollowup">
+        select * from step.practicerx_followup
+        where practicerx_id = #{practicerxId}
+        and followup_id = #{followupId}
+    </select>
+    <update id="updatePracticerxFollowup">
+        update step.practicerx_followup
+        set checked = #{checked},
+            note = #{note}
+        where practicerx_id = #{practicerxId}
+        and followup_id = #{followupId}
+    </update>
+    <insert id="insertPracticerxFollowup">
+        insert step.practicerx_followup
+            (practicerx_id, followup_id, note, checked)
+            values
+                (#{practicerxId},
+                 #{followupId},
+                 #{note},
+                 #{checked})
+    </insert>
+    <select id="allDateAndFollowupIds" resultType="map">
+        select create_date, followup_id from step.followup
         where patient_id = #{patientId}
-          and create_date = #{createDate}
-          and user_id = #{userId}
+        and user_id = #{userId}
     </select>
 </mapper>

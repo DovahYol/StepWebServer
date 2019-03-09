@@ -1,6 +1,7 @@
 package com.step.webServer.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Followup  implements Domain{
     private Integer followupId;
@@ -11,23 +12,25 @@ public class Followup  implements Domain{
     private String personalHistory;
     private String allergicHistory;
     private String familyHistory;
-    private Double height;
-    private Double weight;
-    private Double sbp;
-    private Double dbp;
-    private Double meanbp;
-    private Double heartRate;
-    private Double bodyTemp;
-    private Double breathe;
-    private Double bloodSugar;
+    private String height;
+    private String weight;
+    private String sbp;
+    private String dbp;
+    private String meanbp;
+    private String heartRate;
+    private String bodyTemp;
+    private String breathe;
+    private String bloodSugar;
     private String physExam;
     private String labExam;
-    private Double sbpTarget;
-    private Double dbpTarget;
+    private String sbpTarget;
+    private String dbpTarget;
     private String medicineRx;
-    private Integer isReferral;
+    private Boolean isReferral;
     private Integer patientId;
     private Integer userId;
+    private LocalDateTime nextDatetime;
+    private Boolean nextConfirmed;
 
     public Integer getFollowupId() {
         return followupId;
@@ -93,75 +96,75 @@ public class Followup  implements Domain{
         this.familyHistory = familyHistory;
     }
 
-    public Double getHeight() {
+    public String getHeight() {
         return height;
     }
 
-    public void setHeight(Double height) {
+    public void setHeight(String height) {
         this.height = height;
     }
 
-    public Double getWeight() {
+    public String getWeight() {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public void setWeight(String weight) {
         this.weight = weight;
     }
 
-    public Double getSbp() {
+    public String getSbp() {
         return sbp;
     }
 
-    public void setSbp(Double sbp) {
+    public void setSbp(String sbp) {
         this.sbp = sbp;
     }
 
-    public Double getDbp() {
+    public String getDbp() {
         return dbp;
     }
 
-    public void setDbp(Double dbp) {
+    public void setDbp(String dbp) {
         this.dbp = dbp;
     }
 
-    public Double getMeanbp() {
+    public String getMeanbp() {
         return meanbp;
     }
 
-    public void setMeanbp(Double meanbp) {
+    public void setMeanbp(String meanbp) {
         this.meanbp = meanbp;
     }
 
-    public Double getHeartRate() {
+    public String getHeartRate() {
         return heartRate;
     }
 
-    public void setHeartRate(Double heartRate) {
+    public void setHeartRate(String heartRate) {
         this.heartRate = heartRate;
     }
 
-    public Double getBodyTemp() {
+    public String getBodyTemp() {
         return bodyTemp;
     }
 
-    public void setBodyTemp(Double bodyTemp) {
+    public void setBodyTemp(String bodyTemp) {
         this.bodyTemp = bodyTemp;
     }
 
-    public Double getBreathe() {
+    public String getBreathe() {
         return breathe;
     }
 
-    public void setBreathe(Double breathe) {
+    public void setBreathe(String breathe) {
         this.breathe = breathe;
     }
 
-    public Double getBloodSugar() {
+    public String getBloodSugar() {
         return bloodSugar;
     }
 
-    public void setBloodSugar(Double bloodSugar) {
+    public void setBloodSugar(String bloodSugar) {
         this.bloodSugar = bloodSugar;
     }
 
@@ -181,19 +184,19 @@ public class Followup  implements Domain{
         this.labExam = labExam;
     }
 
-    public Double getSbpTarget() {
+    public String getSbpTarget() {
         return sbpTarget;
     }
 
-    public void setSbpTarget(Double sbpTarget) {
+    public void setSbpTarget(String sbpTarget) {
         this.sbpTarget = sbpTarget;
     }
 
-    public Double getDbpTarget() {
+    public String getDbpTarget() {
         return dbpTarget;
     }
 
-    public void setDbpTarget(Double dbpTarget) {
+    public void setDbpTarget(String dbpTarget) {
         this.dbpTarget = dbpTarget;
     }
 
@@ -205,12 +208,12 @@ public class Followup  implements Domain{
         this.medicineRx = medicineRx;
     }
 
-    public Integer getIsReferral() {
+    public Boolean getReferral() {
         return isReferral;
     }
 
-    public void setIsReferral(Integer isReferral) {
-        this.isReferral = isReferral;
+    public void setReferral(Boolean referral) {
+        isReferral = referral;
     }
 
     public Integer getPatientId() {
@@ -227,5 +230,21 @@ public class Followup  implements Domain{
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public LocalDateTime getNextDatetime() {
+        return nextDatetime;
+    }
+
+    public void setNextDatetime(LocalDateTime nextDatetime) {
+        this.nextDatetime = nextDatetime;
+    }
+
+    public Boolean getNextConfirmed() {
+        return nextConfirmed;
+    }
+
+    public void setNextConfirmed(Boolean nextConfirmed) {
+        this.nextConfirmed = nextConfirmed;
     }
 }
