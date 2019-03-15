@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.step.webServer.mapper.QuestionnaireMapper">
+    <cache-ref namespace="com.step.webServer.mapper" />
+    <select id="questionnairesByPatientId" resultType="map">
+        select B.questionnaire_name,
+               B.questionnaire_id,
+               A.questionnaire_patient_id
+        from questionnaire_patient AS A left join questionnaire AS B
+        on A.questionnaire_id = B.questionnaire_id
+        where A.patient_id = #{patientId}
+    </select>
+</mapper>

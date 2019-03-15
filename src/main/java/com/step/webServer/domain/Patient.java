@@ -21,6 +21,9 @@ public class Patient implements Domain {
     private String emergContName;
     private String emergContPhoneNo;
     private String emergContRelationship;
+    private Integer selfMonitor;
+    private Integer dietGuide;
+    private Integer saltLimitAndDrugGuidance;
     private Integer teamId;
 
     public Integer getAge() {
@@ -157,6 +160,30 @@ public class Patient implements Domain {
 
     public void setEmergContRelationship(String emergContRelationship) {
         this.emergContRelationship = emergContRelationship;
+    }
+
+    public Integer getSelfMonitor() {
+        return selfMonitor;
+    }
+
+    public void setSelfMonitor(Integer selfMonitor) {
+        this.selfMonitor = selfMonitor;
+    }
+
+    public Integer getDietGuide() {
+        return dietGuide;
+    }
+
+    public void setDietGuide(Integer dietGuide) {
+        this.dietGuide = dietGuide;
+    }
+
+    public Integer getSaltLimitAndDrugGuidance() {
+        return saltLimitAndDrugGuidance;
+    }
+
+    public void setSaltLimitAndDrugGuidance(Integer saltLimitAndDrugGuidance) {
+        this.saltLimitAndDrugGuidance = saltLimitAndDrugGuidance;
     }
 
     public Integer getTeamId() {

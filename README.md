@@ -32,6 +32,8 @@
         - awaiting test
     - POST /template/add
         - awaiting test
+    - GET /followUp/allDateAndFollowupIds
+        - awaiting test
     - GET /followUp/exam
         - awaiting test
     - PUT /followUp/exam
@@ -52,10 +54,16 @@
         - awaiting test
     - PUT /followUp/practicerx
         - awaiting test
-    - GET /followUp/allDateAndFollowupIds
+    - GET /medicinerxtemplate
         - awaiting test
-    
-    
-    
-    
+    - PUT /medicinerxtemplate
+        - awaiting test
+    - DELETE /medicinerxtemplate
+        - awaiting test
+    - GET /courserecord
+        - awaiting test
+    - GET /questionnaire
+        - awaiting test    
+    - GET /questionnairerecord
+        - awaiting test
     

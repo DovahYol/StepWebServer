@@ -6,6 +6,7 @@ public class QuestionnairePatient implements Domain {
     private Integer questionnaireId;
     private Integer patientId;
     private LocalDateTime createDatetime;
+    private Integer questionnairePatientId;
 
     public Integer getQuestionnaireId() {
         return questionnaireId;
@@ -29,5 +30,13 @@ public class QuestionnairePatient implements Domain {
 
     public void setCreateDatetime(LocalDateTime createDatetime) {
         this.createDatetime = createDatetime;
+    }
+
+    public Integer getQuestionnairePatientId() {
+        return questionnairePatientId;
+    }
+
+    public void setQuestionnairePatientId(Integer questionnairePatientId) {
+        this.questionnairePatientId = questionnairePatientId;
     }
 }

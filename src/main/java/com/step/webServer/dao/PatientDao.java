@@ -65,4 +65,8 @@ public class PatientDao implements Dao{
         return this.sqlSession.selectOne("patientOverview");
     }
 
+    public Map<String, Object> courserecord(Integer patientId) {
+        return this.sqlSession.selectOne("courserecord", patientId);
+    }
+
 }

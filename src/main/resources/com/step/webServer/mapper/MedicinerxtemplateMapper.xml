@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.step.webServer.mapper.MedicinerxtemplateMapper">
+    <cache-ref namespace="com.step.webServer.mapper" />
+    <select id="allMedicinerxtemplates" resultType="medicinerxtemplate">
+        select
+               medicine_name,
+               specification,
+               unit,
+               medicine_mode,
+               medicine_dosage,
+               medicine_time,
+               medicinerxtemplate_id
+        from step.medicinerxtemplate
+    </select>
+    <select id="medicinerxtemplate" resultType="medicinerxtemplate">
+        select
+            medicine_name,
+            specification,
+            unit,
+            medicine_mode,
+            medicine_dosage,
+            medicine_time
+        from step.medicinerxtemplate
+        where medicinerxtemplate_id = #{medicinerxtemplateId}
+    </select>
+    <update id="updateMedicinerxtemplate">
+        update medicinerxtemplate
+        set medicine_name = #{medicineName},
+            specification = #{specification},
+            unit = #{unit},
+            medicine_mode = #{medicineMode},
+            medicine_dosage = #{medicineDosage},
+            medicine_time = #{medicineTime}
+        where medicinerxtemplate_id = #{medicinerxtemplateId}
+    </update>
+    <insert id="insertMedicinerxtemplate">
+        insert into medicinerxtemplate
+            (
+                medicine_name,
+                specification,
+                unit,
+                medicine_mode,
+                medicine_dosage,
+                medicine_time
+            )
+        values
+            (
+                #{medicineName},
+                #{specification},
+                #{unit},
+                #{medicineMode},
+                #{medicineDosage},
+                #{medicineTime}
+            )
+    </insert>
+    <delete id="deleteMedicinerxtemplate">
+        delete from medicinerxtemplate
+        where medicinerxtemplate_id = #{medicinerxtemplateId}
+    </delete>
+</mapper>
