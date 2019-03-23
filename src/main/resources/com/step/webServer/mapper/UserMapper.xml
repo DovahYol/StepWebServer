@@ -22,14 +22,19 @@
     <select id="selectTeamIdByUsername" resultType="int">
         select team_id from user where username = #{username}
     </select>
+    <select id="selectByUserId" resultType="User">
+        select * from user where user_id = #{userId}
+    </select>
     <insert id="insertOne">
         insert into user
           (username,
             password,
             gender,
             age,
+            birthday,
             prc_id,
             department,
+            position,
             license_id,
             phone_no,
             picture_path,
@@ -42,8 +47,10 @@
             #{password},
             #{gender},
             #{age},
+            #{birthday},
             #{prcId},
             #{department},
+            #{position},
             #{licenseId},
             #{phoneNo},
             #{picturePath},
@@ -52,4 +59,23 @@
             #{hospitalId},
             #{roleId})
     </insert>
+    <update id="updateOne">
+        update step.user set
+                             step.user.username = #{username},
+                             step.user.password = #{password},
+                             step.user.gender = #{gender},
+                             step.user.age = #{age},
+                             step.user.birthday = #{birthday},
+                             step.user.prc_id = #{prcId},
+                             step.user.department = #{department},
+                             step.user.position = #{position},
+                             step.user.license_id = #{licenseId},
+                             step.user.phone_no = #{phoneNo},
+                             step.user.picture_path = #{picturePath},
+                             step.user.confirmed = #{confirmed},
+                             step.user.team_id = #{teamId},
+                             step.user.hospital_id = #{hospitalId},
+                             step.user.role_id = #{roleId}
+        where step.user.user_id = #{userId}
+    </update>
 </mapper>

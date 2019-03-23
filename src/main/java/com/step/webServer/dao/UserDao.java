@@ -33,4 +33,12 @@ public class UserDao implements Dao{
     public Integer selectTeamIdByUsername(String username) {
         return this.sqlSession.selectOne("selectTeamIdByUsername", username);
     }
+
+    public ApplicationUser selectByUserId(int userId) {
+        return this.sqlSession.selectOne("selectByUserId", userId);
+    }
+
+    public int updateOne(ApplicationUser applicationUser) {
+        return this.sqlSession.update("updateOne", applicationUser);
+    }
 }

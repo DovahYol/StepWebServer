@@ -23,6 +23,7 @@
         <mapper resource="com/step/webServer/mapper/MedicinerxtemplateMapper.xml"/>
         <mapper resource="com/step/webServer/mapper/QuestionnaireMapper.xml"/>
         <mapper resource="com/step/webServer/mapper/QuestionnairerecordMapper.xml"/>
+        <mapper resource="com/step/webServer/mapper/TeamMapper.xml"/>
         <!--<mapper resource="com/step/webServer/mapper/"/>-->
     </mappers>
 </configuration>

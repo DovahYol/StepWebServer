@@ -205,4 +205,10 @@
         where patient_id = #{patientId}
         and user_id = #{userId}
     </select>
+    <select id="followupPlan" resultType="map">
+        select patient_name, gender, age, prc_id, next_confirmed from
+                     step.followup AS A left join step.patient AS B
+                       on A.patient_id = B.patient_id
+        where DATE(next_datetime) = CAST(#{nextDate} AS DATE)
+    </select>
 </mapper>

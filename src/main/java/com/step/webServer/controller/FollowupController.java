@@ -232,4 +232,12 @@ public class FollowupController extends AbstractController {
         String username = ((UserPrincipal)authentication.getPrincipal()).getUsername();
         return userDao.selectByUsername(username).getUserId();
     }
+
+    @GetMapping("/plan")
+    public Object plan(String nextDate) {
+        Map<String, Object> map = mapFactory.create();
+        map.put("followups", followupDao.followupPlan(nextDate));
+        responseBuilder.setMap(map);
+        return responseBuilder.getJson();
+    }
 }

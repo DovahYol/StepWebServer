@@ -1,13 +1,17 @@
 package com.step.webServer.domain;
 
+import java.time.LocalDate;
+
 public class ApplicationUser implements Domain {
     private Integer userId;
     private String username;
     private String password;
     private String gender;
     private Integer age;
+    private LocalDate birthday;
     private String prcId;
     private String department;
+    private String position;
     private String licenseId;
     private String phoneNo;
     private String picturePath;
@@ -56,6 +60,14 @@ public class ApplicationUser implements Domain {
         this.age = age;
     }
 
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
     public String getPrcId() {
         return prcId;
     }
@@ -70,6 +82,14 @@ public class ApplicationUser implements Domain {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getLicenseId() {

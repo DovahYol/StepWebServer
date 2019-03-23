@@ -13,4 +13,14 @@
                     values
                     (#{hospitalName}, #{address}, #{adminId})
     </insert>
+    <select id="selectHospitalByAdminId" resultType="hospital">
+        select * from step.hospital
+        where admin_id = #{adminId}
+    </select>
+    <update id="updateHospitalByAdminId">
+        update step.hospital
+        set step.hospital.address = #{address},
+            step.hospital.hospital_name = #{hospitalName}
+        where step.hospital.hospital_id = #{hospitalId}
+    </update>
 </mapper>

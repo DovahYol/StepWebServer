@@ -2,7 +2,7 @@ package com.step.webServer.controller;
 
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.ApplicationUser;
-import com.step.webServer.model.SignupModel;
+import com.step.webServer.model.UserModel;
 import com.step.webServer.service.FileService;
 import com.step.webServer.util.ResponseError;
 import com.step.webServer.util.ResponseErrorFactory;
@@ -43,35 +43,35 @@ public class AuthController extends AbstractController{
 
     @PostMapping("/signup")
     @Transactional
-    public Object signup(SignupModel signupModel) throws IOException {
-        if (signupModel.getUsername() == null) {
+    public Object signup(UserModel userModel) throws IOException {
+        if (userModel.getUsername() == null) {
             responseBuilder.setError(responseErrorFactory.create("未定", "username为null"));
             return responseBuilder.getJson();
-        }else if (signupModel.getPassword() == null) {
+        }else if (userModel.getPassword() == null) {
             responseBuilder.setError(responseErrorFactory.create("未定", "password为null"));
             return responseBuilder.getJson();
-        }else if (signupModel.getHospitalId() == null) {
+        }else if (userModel.getHospitalId() == null) {
             responseBuilder.setError(responseErrorFactory.create("未定", "hospitalId为null"));
             return responseBuilder.getJson();
-        }else if (signupModel.getRoleId() == null) {
+        }else if (userModel.getRoleId() == null) {
             responseBuilder.setError(responseErrorFactory.create("未定", "roleId为null"));
             return responseBuilder.getJson();
         }
         CompletableFuture<String> future = null;
-        if(signupModel.getPicture() != null) {
-            future = fileService.savePicture(signupModel.getPicture());
+        if(userModel.getPicture() != null) {
+            future = fileService.savePicture(userModel.getPicture());
         }
         ApplicationUser applicationUser = new ApplicationUser();
-        applicationUser.setUsername(signupModel.getUsername());
-        applicationUser.setPassword(bCryptPasswordEncoder.encode(signupModel.getPassword()));
-        applicationUser.setGender(signupModel.getGender());
-        applicationUser.setAge(signupModel.getAge());
-        applicationUser.setPrcId(signupModel.getPrcId());
-        applicationUser.setDepartment(signupModel.getDepartment());
-        applicationUser.setLicenseId(signupModel.getLicenseId());
-        applicationUser.setPhoneNo(signupModel.getPhoneNo());
-        applicationUser.setHospitalId(Integer.valueOf(signupModel.getHospitalId()));
-        applicationUser.setRoleId(Integer.valueOf(signupModel.getRoleId()));
+        applicationUser.setUsername(userModel.getUsername());
+        applicationUser.setPassword(bCryptPasswordEncoder.encode(userModel.getPassword()));
+        applicationUser.setGender(userModel.getGender());
+        applicationUser.setAge(userModel.getAge());
+        applicationUser.setPrcId(userModel.getPrcId());
+        applicationUser.setDepartment(userModel.getDepartment());
+        applicationUser.setLicenseId(userModel.getLicenseId());
+        applicationUser.setPhoneNo(userModel.getPhoneNo());
+        applicationUser.setHospitalId(Integer.valueOf(userModel.getHospitalId()));
+        applicationUser.setRoleId(Integer.valueOf(userModel.getRoleId()));
         applicationUser.setConfirmed(0);
         if (future != null) {
             try {
@@ -80,7 +80,7 @@ public class AuthController extends AbstractController{
                 e.printStackTrace();
             }
         }
-        if (userDao.containsUser(signupModel.getUsername())) {
+        if (userDao.containsUser(userModel.getUsername())) {
             ResponseError error = new ResponseError("未定","该用户已存在");
             responseBuilder.setError(error);
             return responseBuilder.getJson();

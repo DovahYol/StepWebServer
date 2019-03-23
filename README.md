@@ -66,4 +66,22 @@
         - awaiting test    
     - GET /questionnairerecord
         - awaiting test
-    
+    - GET /followUp/plan
+        - awaiting test
+    - GET /user/myself
+        - awaiting test
+    - GET /team/name
+        - awaiting test
+    - GET /team/members
+        - awaiting test
+    - GET /user/downloadMyPicture
+        - awaiting test
+    - POST /user/myself
+        - awaiting test
+    - GET /admin/overview
+        - awaiting test
+    - GET /hospital/mine
+        - awaiting test
+    - PUT /hospital/mine
+        - awaiting test
+        

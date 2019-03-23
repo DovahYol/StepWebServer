@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.step.webServer.mapper.TeamMapper">
+    <cache-ref namespace="com.step.webServer.mapper" />
+    <select id="teamById" resultType="team">
+        select *
+        from step.team
+        where team_id = #{teamId}
+    </select>
+    <select id="membersByTeamId" resultType="map">
+        select username, role_name
+        from step.user left join step.role using(role_id)
+        where team_id = #{teamId}
+    </select>
+
+</mapper>

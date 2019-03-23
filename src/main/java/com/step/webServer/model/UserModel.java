@@ -2,7 +2,7 @@ package com.step.webServer.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class SignupModel {
+public class UserModel {
     private String username;
     private String gender;
     private Integer age;
