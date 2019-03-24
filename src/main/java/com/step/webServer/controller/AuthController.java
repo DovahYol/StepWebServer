@@ -6,10 +6,11 @@ import com.step.webServer.model.UserModel;
 import com.step.webServer.service.FileService;
 import com.step.webServer.util.ResponseError;
 import com.step.webServer.util.ResponseErrorFactory;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -19,19 +20,22 @@ import java.util.concurrent.ExecutionException;
 public class AuthController extends AbstractController{
 
     private UserDao userDao;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
     private FileService fileService;
     private ResponseErrorFactory responseErrorFactory;
+    @Autowired
+    HttpServletRequest request;
 
-    public AuthController(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder, FileService fileService, ResponseErrorFactory responseErrorFactory) {
+    public AuthController(UserDao userDao,FileService fileService, ResponseErrorFactory responseErrorFactory) {
         this.userDao = userDao;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.fileService = fileService;
         this.responseErrorFactory = responseErrorFactory;
     }
 
-    @PostMapping("/login?error")
-    public Object login(String error) {
+    @PostMapping("/login")
+    public Object login(String username, String password) {
+        ApplicationUser appUser = userDao.selectByUsername(username);
+        request.getSession().setAttribute("username", username);
+        request.getSession().setAttribute("userId", appUser.getUserId());
         return responseBuilder.getJson();
     }
 
@@ -63,7 +67,7 @@ public class AuthController extends AbstractController{
         }
         ApplicationUser applicationUser = new ApplicationUser();
         applicationUser.setUsername(userModel.getUsername());
-        applicationUser.setPassword(bCryptPasswordEncoder.encode(userModel.getPassword()));
+        applicationUser.setPassword(userModel.getPassword());
         applicationUser.setGender(userModel.getGender());
         applicationUser.setAge(userModel.getAge());
         applicationUser.setPrcId(userModel.getPrcId());

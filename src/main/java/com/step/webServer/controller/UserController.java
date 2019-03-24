@@ -3,10 +3,8 @@ package com.step.webServer.controller;
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.ApplicationUser;
 import com.step.webServer.model.UserModel;
-import com.step.webServer.security.UserPrincipal;
 import com.step.webServer.service.FileService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,24 +28,25 @@ import java.util.concurrent.ExecutionException;
 public class UserController extends AbstractController{
     private UserDao userDao;
     private FileService fileService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    HttpServletRequest request;
 
     public UserController(UserDao userDao) {
         this.userDao = userDao;
     }
 
     @GetMapping("/mySidebar")
-    public Object getMySidebar(Authentication authentication) {
+    public Object getMySidebar() {
         Map<String, Object> map = new HashMap<>();
-        List<String> sideBar = userDao.getSidebarByUsername(((UserPrincipal)authentication.getPrincipal()).getUsername());
+        List<String> sideBar = userDao.getSidebarByUsername((String)request.getSession().getAttribute("username"));
         map.put("sections", sideBar);
         responseBuilder.setMap(map);
         return responseBuilder.getJson();
     }
 
     @GetMapping("/myself")
-    public Object myself(Authentication authentication) {
-        int userId = getUserId(authentication);
+    public Object myself() {
+        int userId = (int) request.getSession().getAttribute("userId");
         ApplicationUser applicationUser = userDao.selectByUserId(userId);
         Map<String, Object> map = new HashMap<>();
         map.put("username", applicationUser.getUsername());
@@ -64,14 +64,9 @@ public class UserController extends AbstractController{
         return responseBuilder.getJson();
     }
 
-    private int getUserId(Authentication authentication) {
-        String username = ((UserPrincipal)authentication.getPrincipal()).getUsername();
-        return userDao.selectByUsername(username).getUserId();
-    }
-
     @GetMapping(value = "/downloadMyPicture", produces = "application/octet-stream")
-    public void downloadMyPicture(HttpServletResponse response, Authentication authentication) throws IOException {
-        int userId = getUserId(authentication);
+    public void downloadMyPicture(HttpServletResponse response) throws IOException {
+        int userId = (int) request.getSession().getAttribute("userId");
         ApplicationUser user = userDao.selectByUserId(userId);
         FileCopyUtils.copy(
                 new FileInputStream(new File(user.getPicturePath())),
@@ -81,15 +76,15 @@ public class UserController extends AbstractController{
 
     @PostMapping(value = "/myself")
     @Transactional
-    public Object postMyself(UserModel userModel, Authentication authentication) throws IOException {
-        int userId = getUserId(authentication);
+    public Object postMyself(UserModel userModel) throws IOException {
+        int userId = (int) request.getSession().getAttribute("userId");
         CompletableFuture<String> future = null;
         if(userModel.getPicture() != null) {
             future = fileService.savePicture(userModel.getPicture());
         }
         ApplicationUser applicationUser = userDao.selectByUserId(userId);
         applicationUser.setUsername(userModel.getUsername());
-        applicationUser.setPassword(bCryptPasswordEncoder.encode(userModel.getPassword()));
+        applicationUser.setPassword(userModel.getPassword());
         applicationUser.setGender(userModel.getGender());
         applicationUser.setAge(userModel.getAge());
         applicationUser.setPrcId(userModel.getPrcId());

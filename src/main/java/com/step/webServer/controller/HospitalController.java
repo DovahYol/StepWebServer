@@ -3,11 +3,11 @@ package com.step.webServer.controller;
 import com.step.webServer.dao.HospitalDao;
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.Hospital;
-import com.step.webServer.security.UserPrincipal;
 import com.step.webServer.util.ResponseError;
-import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +17,8 @@ public class HospitalController extends AbstractController{
 
     private HospitalDao hospitalDao;
     private UserDao userDao;
+    @Autowired
+    HttpServletRequest request;
 
     public HospitalController(HospitalDao hospitalDao) {
         this.hospitalDao = hospitalDao;
@@ -37,8 +39,8 @@ public class HospitalController extends AbstractController{
     }
 
     @GetMapping(value = "/mine", consumes = "application/json")
-    public Object getMine(Authentication authentication) {
-        int userId = getUserId(authentication);
+    public Object getMine() {
+        int userId = (int)request.getSession().getAttribute("userId");
         Hospital hospital = hospitalDao.selectHospitalByAdminId(userId);
         Map<String, Object> map = new HashMap<>();
         if (hospital != null) {
@@ -53,8 +55,8 @@ public class HospitalController extends AbstractController{
     }
 
     @PutMapping(value = "/mine", consumes = "application/json")
-    public Object putMine(Hospital model, Authentication authentication) {
-        int userId = getUserId(authentication);
+    public Object putMine(Hospital model) {
+        int userId = (int)request.getSession().getAttribute("userId");
         Hospital hospital = hospitalDao.selectHospitalByAdminId(userId);
         if (hospital != null) {
             hospital.setAddress(model.getAddress());
@@ -68,8 +70,8 @@ public class HospitalController extends AbstractController{
         return responseBuilder.getJson();
     }
 
-    private int getUserId(Authentication authentication) {
-        String username = ((UserPrincipal)authentication.getPrincipal()).getUsername();
+    private int getUserId() {
+        String username = (String) request.getSession().getAttribute("username");
         return userDao.selectByUsername(username).getUserId();
     }
 }

@@ -6,18 +6,17 @@ import com.step.webServer.dao.PatientDao;
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.Patient;
 import com.step.webServer.model.PatientAddingModel;
-import com.step.webServer.security.UserPrincipal;
 import com.step.webServer.util.MapFactory;
 import com.step.webServer.util.ResponseErrorFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,6 +31,8 @@ public class PatientController extends AbstractController{
     private final BprecordDao bprecordDao;
     private MapFactory<String, Object> mapFactory;
     private ResponseErrorFactory responseErrorFactory;
+    @Autowired
+    HttpServletRequest request;
 
     @Autowired
     public void setMapFactory(MapFactory<String, Object> mapFactory) {
@@ -50,8 +51,8 @@ public class PatientController extends AbstractController{
     }
 
     @GetMapping
-    public Object getAllPatients(String keyword, int pageNum, int pageSize, String orderBy, boolean isAsc, Authentication authentication) throws JsonProcessingException {
-        String username = ((UserPrincipal)authentication.getPrincipal()).getUsername();
+    public Object getAllPatients(String keyword, int pageNum, int pageSize, String orderBy, boolean isAsc) throws JsonProcessingException {
+        String username = (String)request.getSession().getAttribute("username");
         String direction = isAsc? " asc" : " desc";
         if("patientId".equals(orderBy)) {
             orderBy = "patient_id" + direction;
@@ -78,7 +79,7 @@ public class PatientController extends AbstractController{
 
     @PostMapping("/add")
     @Transactional
-    public Object addPatient(PatientAddingModel patientAddingModel, Authentication authentication) {
+    public Object addPatient(PatientAddingModel patientAddingModel) {
         Patient patient = new Patient();
         if (patientAddingModel.getPatientName() == null) {
             responseBuilder.setError(responseErrorFactory.create("未定", "patientName为null"));
@@ -131,7 +132,7 @@ public class PatientController extends AbstractController{
         patient.setEmergContName(patientAddingModel.getEmergContName());
         patient.setEmergContPhoneNo(patientAddingModel.getEmergContPhoneNo());
         patient.setEmergContRelationship(patientAddingModel.getEmergContRelationship());
-        patient.setTeamId(userDao.selectTeamIdByUsername(((UserPrincipal)authentication.getPrincipal()).getUsername()));
+        patient.setTeamId(userDao.selectTeamIdByUsername((String) request.getSession().getAttribute("username")));
         if (patientDao.hasPatient(patientAddingModel.getPatientName())) {
             responseBuilder.setError(responseErrorFactory.create("未定", "patientName已存在"));
             return responseBuilder.getJson();

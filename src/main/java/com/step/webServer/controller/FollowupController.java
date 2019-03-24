@@ -6,15 +6,15 @@ import com.step.webServer.domain.Followup;
 import com.step.webServer.domain.PracticerxFollowup;
 import com.step.webServer.domain.RiskfactorFollowup;
 import com.step.webServer.model.*;
-import com.step.webServer.security.UserPrincipal;
 import com.step.webServer.util.MapFactory;
-import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +26,8 @@ public class FollowupController extends AbstractController {
     private final FollowupDao followupDao;
     private final UserDao userDao;
     private final MapFactory<String, Object> mapFactory;
+    @Autowired
+    HttpServletRequest request;
 
     public FollowupController(FollowupDao followupDao, UserDao userDao, MapFactory<String, Object> mapFactory) {
         this.followupDao = followupDao;
@@ -42,8 +44,8 @@ public class FollowupController extends AbstractController {
 
     @PutMapping("/medicalRecord")
     @Transactional
-    public Object putMedicalRecord(MedicalRecordModel medicalRecordModel, Authentication authentication) throws Exception {
-        int userId = getUserId(authentication);
+    public Object putMedicalRecord(MedicalRecordModel medicalRecordModel) throws Exception {
+        int userId = (int)request.getSession().getAttribute("userId");
         Followup followup = followupDao.followup(Integer.valueOf(medicalRecordModel.getPatientId()), LocalDate.parse(medicalRecordModel.getCreateDate()), userId);
         if (followup != null) {
             copyMedicalRecordModelToFollowup(medicalRecordModel, followup);
@@ -80,8 +82,8 @@ public class FollowupController extends AbstractController {
 
     @PutMapping("/exam")
     @Transactional
-    public Object putExam(ExamModel examModel, Authentication authentication) throws Exception {
-        int userId = getUserId(authentication);
+    public Object putExam(ExamModel examModel) throws Exception {
+        int userId = (int)request.getSession().getAttribute("userId");
         Followup followup = followupDao.followup(Integer.valueOf(examModel.getPatientId()), LocalDate.parse(examModel.getCreateDate()), userId);
         if (followup != null) {
             copyExamModelToFollowup(examModel, followup);
@@ -114,8 +116,8 @@ public class FollowupController extends AbstractController {
     }
 
     @GetMapping("/allDateAndFollowupIds")
-    public Object allDateAndFollowupIds(String patientId, Authentication authentication) {
-        int userId = getUserId(authentication);
+    public Object allDateAndFollowupIds(String patientId) {
+        int userId = (int)request.getSession().getAttribute("userId");
         Map<String, Object> map = mapFactory.create();
         responseBuilder.setMap(map);
         map.put("allDateAndFollowupIds", followupDao.allDateAndFollowupIds(patientId, userId));
@@ -179,8 +181,8 @@ public class FollowupController extends AbstractController {
     }
 
     @PutMapping("/mgtPlan")
-    public Object putMgtPlan(MgtPlanModel mgtPlanModel, Authentication authentication) throws Exception {
-        int userId = getUserId(authentication);
+    public Object putMgtPlan(MgtPlanModel mgtPlanModel) throws Exception {
+        int userId = (int)request.getSession().getAttribute("userId");
         Followup followup = followupDao.followup(
                 Integer.valueOf(mgtPlanModel.getPatientId()),
                 LocalDate.parse(mgtPlanModel.getCreateDate()),
@@ -228,8 +230,8 @@ public class FollowupController extends AbstractController {
         followup.setNextDatetime(LocalDateTime.parse(mgtPlanModel.getNextDatetime()));
     }
 
-    private int getUserId(Authentication authentication) {
-        String username = ((UserPrincipal)authentication.getPrincipal()).getUsername();
+    private int getUserId() {
+        String username = (String) request.getSession().getAttribute("username");
         return userDao.selectByUsername(username).getUserId();
     }
 

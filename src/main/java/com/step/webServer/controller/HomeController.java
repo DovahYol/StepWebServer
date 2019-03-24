@@ -1,15 +1,14 @@
 package com.step.webServer.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.step.webServer.dao.PatientDao;
 import com.step.webServer.model.NameValueModel;
-import com.step.webServer.security.UserPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +19,8 @@ import java.util.Map;
 public class HomeController extends AbstractController{
 
     private PatientDao patientDao;
+    @Autowired
+    HttpServletRequest request;
 
     public HomeController(PatientDao patientDao) {
         this.patientDao = patientDao;
@@ -28,8 +29,7 @@ public class HomeController extends AbstractController{
     @GetMapping()
     @Transactional
     public Object home() {
-        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userPrincipal.getUsername();
+        String username = (String) request.getSession().getAttribute("username");
         int numPatients = patientDao.numPatientsByUsername(username);
         int numNewPatients = patientDao.numNewPatientsByUsername(username);
         int numPatientsWithInvalidBp = patientDao.numPatientsWithInvalidBpByUsername(username);
