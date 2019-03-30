@@ -133,11 +133,10 @@ public class PatientController extends AbstractController{
         patient.setEmergContPhoneNo(patientAddingModel.getEmergContPhoneNo());
         patient.setEmergContRelationship(patientAddingModel.getEmergContRelationship());
         patient.setTeamId(userDao.selectTeamIdByUsername((String) request.getSession().getAttribute("username")));
-        if (patientDao.hasPatient(patientAddingModel.getPatientName())) {
-            responseBuilder.setError(responseErrorFactory.create("未定", "patientName已存在"));
-            return responseBuilder.getJson();
-        }
         patientDao.insertPatient(patient);
+        Map<String, Object> params = mapFactory.create();
+        params.put("patientId", patient.getPatientId());
+        responseBuilder.setMap(params);
         return responseBuilder.getJson();
     }
 

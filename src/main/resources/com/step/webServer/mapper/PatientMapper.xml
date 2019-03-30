@@ -73,7 +73,7 @@
         select patient_id from patient
         where patient_name = #{patientName}
     </select>
-    <insert id="insertPatient">
+    <insert id="insertPatient" useGeneratedKeys="true" keyProperty="patientId">
         insert into patient
           (patient_name, create_datetime, gender, prc_id, birthday,
            marriage, ethnicity, degree_education, profession, address,
