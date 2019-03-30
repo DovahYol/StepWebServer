@@ -56,7 +56,7 @@
           bprecord.patient_id = latest_bprecord.patient_id
     </sql>
     <select id="selectAllPatients" resultType="map">
-        select patient.patient_id, patient_name, patient.gender, patient.age, latest_home_bp
+        select patient.patient_id patientId, patient_name patientName, patient.gender, patient.age, latest_home_bp latestHomeBP
         from patient
           inner join user using (team_id)
           left join (<include refid="latestHomeBp"/>) as A using (patient_id)
