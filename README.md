@@ -78,6 +78,8 @@
         - awaiting test
     - POST /user/myself
         - awaiting test
+    - POST /user/uploadMyPicture
+        - awaiting test
     - GET /admin/overview
         - awaiting test
     - GET /hospital/mine

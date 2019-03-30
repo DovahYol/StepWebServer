@@ -25,11 +25,10 @@ public class FileService {
         }
     }
 
-    @Async
-    public CompletableFuture<String> savePicture(MultipartFile multipartFile) throws IOException {
+    public String savePicture(MultipartFile multipartFile) throws IOException {
         File file = File.createTempFile("user", "", new File(PICTURE_PATH));
         multipartFile.transferTo(file);
-        return CompletableFuture.completedFuture(file.getPath());
+        return file.getPath();
     }
 
 }

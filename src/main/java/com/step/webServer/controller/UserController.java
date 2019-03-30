@@ -1,16 +1,19 @@
 package com.step.webServer.controller;
 
+import com.step.webServer.dao.TeamDao;
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.ApplicationUser;
 import com.step.webServer.model.UserModel;
 import com.step.webServer.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,16 +23,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping(value = "/user", produces = "application/json;charset=UTF-8")
 public class UserController extends AbstractController{
     private UserDao userDao;
+    private TeamDao teamDao;
     private FileService fileService;
     @Autowired
     HttpServletRequest request;
+
+    @Autowired
+    BCryptPasswordEncoder encoder;
 
     public UserController(UserDao userDao) {
         this.userDao = userDao;
@@ -59,7 +64,7 @@ public class UserController extends AbstractController{
         map.put("position", applicationUser.getPosition());
         map.put("licenseId", applicationUser.getLicenseId());
         map.put("phoneNo", applicationUser.getPhoneNo());
-        map.put("teamId", applicationUser.getTeamId());
+        map.put("teamName", teamDao.teamById(applicationUser.getTeamId()).getTeamName());
         responseBuilder.setMap(map);
         return responseBuilder.getJson();
     }
@@ -78,29 +83,20 @@ public class UserController extends AbstractController{
     @Transactional
     public Object postMyself(UserModel userModel) throws IOException {
         int userId = (int) request.getSession().getAttribute("userId");
-        CompletableFuture<String> future = null;
-        if(userModel.getPicture() != null) {
-            future = fileService.savePicture(userModel.getPicture());
-        }
-        ApplicationUser applicationUser = userDao.selectByUserId(userId);
-        applicationUser.setUsername(userModel.getUsername());
-        applicationUser.setPassword(userModel.getPassword());
-        applicationUser.setGender(userModel.getGender());
-        applicationUser.setAge(userModel.getAge());
-        applicationUser.setPrcId(userModel.getPrcId());
-        applicationUser.setDepartment(userModel.getDepartment());
-        applicationUser.setLicenseId(userModel.getLicenseId());
-        applicationUser.setPhoneNo(userModel.getPhoneNo());
-        applicationUser.setHospitalId(Integer.valueOf(userModel.getHospitalId()));
-        applicationUser.setRoleId(Integer.valueOf(userModel.getRoleId()));
-        if (future != null) {
-            try {
-                applicationUser.setPicturePath(future.get());
-            } catch (InterruptedException | ExecutionException e) {//TODO
-                e.printStackTrace();
-            }
-        }
-        userDao.updateOne(applicationUser);
+        ApplicationUser user = userDao.selectByUserId(userId);
+        user.setPassword(encoder.encode(userModel.getPassword()));
+        user.setPhoneNo(userModel.getPhoneNo());
+        userDao.updateOne(user);
+        return responseBuilder.getJson();
+    }
+
+    @PostMapping(value = "/uploadMyPicture")
+    public Object uploadMyPicture(MultipartFile picture) throws IOException {
+        int userId = (int) request.getSession().getAttribute("userId");
+        ApplicationUser user = userDao.selectByUserId(userId);
+        String path = fileService.savePicture(picture);
+        user.setPicturePath(path);
+        userDao.updateOne(user);
         return responseBuilder.getJson();
     }
 }

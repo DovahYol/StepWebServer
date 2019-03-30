@@ -7,13 +7,12 @@ import com.step.webServer.service.FileService;
 import com.step.webServer.util.ResponseError;
 import com.step.webServer.util.ResponseErrorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping(produces = "application/json;charset=UTF-8")
@@ -24,6 +23,8 @@ public class AuthController extends AbstractController{
     private ResponseErrorFactory responseErrorFactory;
     @Autowired
     HttpServletRequest request;
+    @Autowired
+    BCryptPasswordEncoder encoder;
 
     public AuthController(UserDao userDao,FileService fileService, ResponseErrorFactory responseErrorFactory) {
         this.userDao = userDao;
@@ -61,13 +62,10 @@ public class AuthController extends AbstractController{
             responseBuilder.setError(responseErrorFactory.create("未定", "roleId为null"));
             return responseBuilder.getJson();
         }
-        CompletableFuture<String> future = null;
-        if(userModel.getPicture() != null) {
-            future = fileService.savePicture(userModel.getPicture());
-        }
+        String path = fileService.savePicture(userModel.getPicture());
         ApplicationUser applicationUser = new ApplicationUser();
         applicationUser.setUsername(userModel.getUsername());
-        applicationUser.setPassword(userModel.getPassword());
+        applicationUser.setPassword(encoder.encode(userModel.getPassword()));
         applicationUser.setGender(userModel.getGender());
         applicationUser.setAge(userModel.getAge());
         applicationUser.setPrcId(userModel.getPrcId());
@@ -77,13 +75,7 @@ public class AuthController extends AbstractController{
         applicationUser.setHospitalId(Integer.valueOf(userModel.getHospitalId()));
         applicationUser.setRoleId(Integer.valueOf(userModel.getRoleId()));
         applicationUser.setConfirmed(0);
-        if (future != null) {
-            try {
-                applicationUser.setPicturePath(future.get());
-            } catch (InterruptedException | ExecutionException e) {//TODO
-                e.printStackTrace();
-            }
-        }
+        applicationUser.setPicturePath(path);
         if (userDao.containsUser(userModel.getUsername())) {
             ResponseError error = new ResponseError("未定","该用户已存在");
             responseBuilder.setError(error);
