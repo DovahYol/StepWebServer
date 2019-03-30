@@ -86,4 +86,19 @@
         - awaiting test
     - PUT /hospital/mine
         - awaiting test
-        
+    - GET /team/
+        - awaiting test
+    - GET /team/detail
+        - awaiting test
+    - GET /team/overview
+        - awaiting test
+    - POST /team/addMember
+        - awaiting test
+    - POST /team/deleteMember
+        - awaiting test
+    - POST /team/create
+        - awaiting test
+    - POST /team/delete
+        - awaiting test
+    - GET /team/usersAvailable
+        - awaiting test

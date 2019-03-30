@@ -78,4 +78,28 @@
                              step.user.role_id = #{roleId}
         where step.user.user_id = #{userId}
     </update>
+    
+    <select id="doctorsAvailable">
+        select user_id, username from step.user
+        where role_id = 1
+        and (
+            team_id is null
+            or
+            team_id not in (select team_id from step.team)
+            )
+        and confirmed is not null
+        and confirmed = true
+    </select>
+
+    <select id="nursesAvailable">
+        select user_id, username from step.user
+        where role_id = 2
+          and (
+                team_id is null
+                or
+                team_id not in (select team_id from step.team)
+            )
+          and confirmed is not null
+          and confirmed = true
+    </select>
 </mapper>

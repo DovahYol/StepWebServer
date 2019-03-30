@@ -74,7 +74,7 @@ public class AuthController extends AbstractController{
         applicationUser.setPhoneNo(userModel.getPhoneNo());
         applicationUser.setHospitalId(Integer.valueOf(userModel.getHospitalId()));
         applicationUser.setRoleId(Integer.valueOf(userModel.getRoleId()));
-        applicationUser.setConfirmed(0);
+        applicationUser.setConfirmed(false);
         applicationUser.setPicturePath(path);
         if (userDao.containsUser(userModel.getUsername())) {
             ResponseError error = new ResponseError("未定","该用户已存在");

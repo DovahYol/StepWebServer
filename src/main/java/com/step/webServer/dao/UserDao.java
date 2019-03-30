@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class UserDao implements Dao{
@@ -40,5 +41,13 @@ public class UserDao implements Dao{
 
     public int updateOne(ApplicationUser applicationUser) {
         return this.sqlSession.update("updateOne", applicationUser);
+    }
+
+    public List<Map<String, Object>> doctorsAvailable() {
+        return this.sqlSession.selectList("doctorsAvailable");
+    }
+
+    public List<Map<String, Object>> nursesAvailable() {
+        return this.sqlSession.selectList("nursesAvailable");
     }
 }

@@ -15,7 +15,7 @@ public class ApplicationUser implements Domain {
     private String licenseId;
     private String phoneNo;
     private String picturePath;
-    private Integer confirmed;
+    private Boolean confirmed;
     private Integer teamId;
     private Integer hospitalId;
     private Integer roleId;
@@ -116,11 +116,11 @@ public class ApplicationUser implements Domain {
         this.picturePath = picturePath;
     }
 
-    public Integer getConfirmed() {
+    public Boolean getConfirmed() {
         return confirmed;
     }
 
-    public void setConfirmed(Integer confirmed) {
+    public void setConfirmed(Boolean confirmed) {
         this.confirmed = confirmed;
     }
 

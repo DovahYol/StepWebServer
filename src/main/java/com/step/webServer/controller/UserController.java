@@ -99,4 +99,5 @@ public class UserController extends AbstractController{
         userDao.updateOne(user);
         return responseBuilder.getJson();
     }
+
 }
