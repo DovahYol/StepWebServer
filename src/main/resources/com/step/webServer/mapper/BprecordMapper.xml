@@ -19,4 +19,25 @@
         from step.bprecord
         where patient_id = #{patientId}
     </select>
+    <insert id="insertOneBprecord">
+        insert into step.bprecord
+            (sbp,
+             dbp,
+             map,
+             pulse_rate,
+             meas_state,
+             symptom,
+             create_datetime,
+             patient_id) values
+            (
+                #{sbp},
+                #{dbp},
+                #{map},
+                #{pulseRate},
+                #{measState},
+                #{symptom},
+                #{createDatetime},
+                #{patientId}
+            )
+    </insert>
 </mapper>

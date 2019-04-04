@@ -22,6 +22,8 @@
     - GET /patient/bpAnalysis
         - 未达标次数（numInvalid），达标率（validRate）未实现
         - awaiting test
+    - POST /bprecord
+        - awaiting test
     - GET /followUp/medicalRecord
         - awaiting test
     - PUT /followUp/medicalRecord

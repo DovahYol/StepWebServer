@@ -1,5 +1,6 @@
 package com.step.webServer.dao;
 
+import com.step.webServer.domain.Bprecord;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,10 @@ public class BprecordDao implements Dao{
 
     public List<Map<String, Object>> bpRecords(String patientId) {
         return this.sqlSession.selectList("bpRecords", patientId);
+    }
+
+    public int insertOne(Bprecord bprecord) {
+        return this.sqlSession.insert("insertOneBprecord", bprecord);
     }
 
 }
