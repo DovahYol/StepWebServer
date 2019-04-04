@@ -79,7 +79,7 @@
         where step.user.user_id = #{userId}
     </update>
     
-    <select id="doctorsAvailable">
+    <select id="doctorsAvailable" resultType="map">
         select user_id, username from step.user
         where role_id = 1
         and (
@@ -91,7 +91,7 @@
         and confirmed = true
     </select>
 
-    <select id="nursesAvailable">
+    <select id="nursesAvailable" resultType="map">
         select user_id, username from step.user
         where role_id = 2
           and (
@@ -102,4 +102,19 @@
           and confirmed is not null
           and confirmed = true
     </select>
+    <select id="getUnconfirmed" resultType="map">
+        select
+               user_id AS userId,
+               username,
+               gender,
+               role_name AS roleName,
+               phone_no AS phoneNo,
+               prc_id AS prcId
+        from user left join step.role using(role_id)
+        where confirmed = false
+    </select>
+    <update id="updateConfirmed">
+        update user set confirmed = #{confirmed}
+        where user_id = #{userId}
+    </update>
 </mapper>

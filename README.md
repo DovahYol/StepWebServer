@@ -102,3 +102,7 @@
         - awaiting test
     - GET /team/usersAvailable
         - awaiting test
+    - GET /user/unconfirmed
+        - awaiting test
+    - POST /user/unconfirmed
+        - awaiting test        

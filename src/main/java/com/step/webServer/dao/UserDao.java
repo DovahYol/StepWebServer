@@ -1,6 +1,7 @@
 package com.step.webServer.dao;
 
 import com.step.webServer.domain.ApplicationUser;
+import com.step.webServer.util.MapFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +11,11 @@ import java.util.Map;
 @Component
 public class UserDao implements Dao{
     private final SqlSession sqlSession;
+    private final MapFactory<String, Object> mapFactory;
 
-    public UserDao(SqlSession sqlSession) {
+    public UserDao(SqlSession sqlSession, MapFactory<String, Object> mapFactory) {
         this.sqlSession = sqlSession;
+        this.mapFactory = mapFactory;
     }
 
     public List<String> getSidebarByUsername(String username) {
@@ -49,5 +52,16 @@ public class UserDao implements Dao{
 
     public List<Map<String, Object>> nursesAvailable() {
         return this.sqlSession.selectList("nursesAvailable");
+    }
+
+    public List<Map<String, Object>> getUnconfirmed() {
+        return this.sqlSession.selectList("getUnconfirmed");
+    }
+
+    public int updateConfirmed(boolean confirmed, int userId) {
+        Map<String, Object> params = mapFactory.create();
+        params.put("confirmed", confirmed);
+        params.put("userId", userId);
+        return this.sqlSession.update("updateConfirmed", params);
     }
 }

@@ -5,6 +5,7 @@ import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.ApplicationUser;
 import com.step.webServer.model.UserModel;
 import com.step.webServer.service.FileService;
+import com.step.webServer.util.MapFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,14 +31,18 @@ public class UserController extends AbstractController{
     private UserDao userDao;
     private TeamDao teamDao;
     private FileService fileService;
+    private final MapFactory<String, Object> mapFactory;
     @Autowired
     HttpServletRequest request;
 
     @Autowired
     BCryptPasswordEncoder encoder;
 
-    public UserController(UserDao userDao) {
+    public UserController(UserDao userDao, TeamDao teamDao, FileService fileService, MapFactory<String, Object> mapFactory) {
         this.userDao = userDao;
+        this.teamDao = teamDao;
+        this.fileService = fileService;
+        this.mapFactory = mapFactory;
     }
 
     @GetMapping("/mySidebar")
@@ -97,6 +102,21 @@ public class UserController extends AbstractController{
         String path = fileService.savePicture(picture);
         user.setPicturePath(path);
         userDao.updateOne(user);
+        return responseBuilder.getJson();
+    }
+
+
+    @GetMapping("/unconfirmed")
+    public Object unconfirmed() {
+        Map<String, Object> map = mapFactory.create();
+        map.put("reviews", userDao.getUnconfirmed());
+        responseBuilder.setMap(map);
+        return responseBuilder.getJson();
+    }
+
+    @PostMapping("/unconfirmed")
+    public Object postUnconfirmed(boolean confirmed, int userId) {
+        userDao.updateConfirmed(confirmed, userId);
         return responseBuilder.getJson();
     }
 
