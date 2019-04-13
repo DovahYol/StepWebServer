@@ -7,6 +7,8 @@ import com.step.webServer.domain.PracticerxFollowup;
 import com.step.webServer.domain.RiskfactorFollowup;
 import com.step.webServer.model.*;
 import com.step.webServer.util.MapFactory;
+import com.step.webServer.util.ResponseError;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -117,6 +119,11 @@ public class FollowupController extends AbstractController {
 
     @GetMapping("/allDateAndFollowupIds")
     public Object allDateAndFollowupIds(String patientId) {
+        if (StringUtils.isBlank(patientId)) {
+            ResponseError error = new ResponseError("2", "必须输入patientId");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
+        }
         int userId = (int)request.getSession().getAttribute("userId");
         Map<String, Object> map = mapFactory.create();
         responseBuilder.setMap(map);

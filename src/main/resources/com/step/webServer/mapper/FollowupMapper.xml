@@ -201,7 +201,9 @@
                  #{checked})
     </insert>
     <select id="allDateAndFollowupIds" resultType="map">
-        select create_date, followup_id from step.followup
+        select create_date AS createDate,
+               followup_id AS followupId
+        from step.followup
         where patient_id = #{patientId}
         and user_id = #{userId}
     </select>

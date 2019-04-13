@@ -5,7 +5,10 @@
 <mapper namespace="com.step.webServer.mapper.TemplateMapper">
     <cache-ref namespace="com.step.webServer.mapper" />
     <select id="templatesByType" resultType="map">
-        select template_content, template_id from step.template
+        select
+               template_content AS templateContent,
+               template_id AS templateId
+        from step.template
         where template_type = #{templateType}
     </select>
     <delete id="deleteTemplatesById">

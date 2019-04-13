@@ -39,12 +39,9 @@ public class TemplateController extends AbstractController{
         return responseBuilder.getJson();
     }
 
-    @PostMapping("/template/add")
-    public Object addTemplate(String templateType, List<String> templateContents) {
-        for (String templateContent :
-                templateContents) {
-            templateDao.insertTemplate(templateContent, templateType);
-        }
+    @PostMapping("/add")
+    public Object addTemplate(String templateType, String templateContent) {
+        templateDao.insertTemplate(templateContent, templateType);
         return responseBuilder.getJson();
     }
 }
