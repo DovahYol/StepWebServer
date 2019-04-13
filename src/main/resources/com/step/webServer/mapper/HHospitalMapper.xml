@@ -7,7 +7,7 @@
     <select id="selectAllHospitals" resultType="hospital">
         select * from hospital
     </select>
-    <insert id="selectOneHospital">
+    <insert id="insertHospital">
         insert into hospital
                     (hospital_name, address, admin_id)
                     values
@@ -21,6 +21,6 @@
         update step.hospital
         set step.hospital.address = #{address},
             step.hospital.hospital_name = #{hospitalName}
-        where step.hospital.hospital_id = #{hospitalId}
+        where step.hospital.admin_id = #{adminId}
     </update>
 </mapper>

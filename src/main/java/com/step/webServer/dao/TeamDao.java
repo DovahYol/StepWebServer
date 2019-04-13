@@ -65,10 +65,7 @@ public class TeamDao implements Dao  {
         return sqlSession.update("addMember", userId);
     }
 
-    public int insertTeam(String teamName, int adminId) {
-        Map<String, Object> params = mapFactory.create();
-        params.put("teamName", teamName);
-        params.put("adminId", adminId);
+    public int insertTeam(Map<String, Object> params) {
         return sqlSession.insert("insertTeam", params);
     }
 

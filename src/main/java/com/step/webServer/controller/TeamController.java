@@ -126,7 +126,14 @@ public class TeamController extends AbstractController  {
     @PostMapping("/create")
     public Object create(String teamName) {
         int userId = (int) request.getSession().getAttribute("userId");
-        teamDao.insertTeam(teamName, userId);
+        Map<String, Object> params = mapFactory.create();
+        params.put("teamName", teamName);
+        params.put("adminId", userId);
+        params.put("teamId", null);
+        teamDao.insertTeam(params);
+        params.remove("teamName");
+        params.remove("adminId");
+        responseBuilder.setMap(params);
         return responseBuilder.getJson();
     }
 

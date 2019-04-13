@@ -38,7 +38,7 @@ public class HospitalController extends AbstractController{
         return responseBuilder.getJson();
     }
 
-    @GetMapping(value = "/mine", consumes = "application/json")
+    @GetMapping(value = "/mine")
     public Object getMine() {
         int userId = (int)request.getSession().getAttribute("userId");
         Hospital hospital = hospitalDao.selectHospitalByAdminId(userId);
@@ -46,7 +46,6 @@ public class HospitalController extends AbstractController{
         if (hospital != null) {
             map.put("address", hospital.getAddress());
             map.put("hospitalName", hospital.getHospitalName());
-            map.put("hospitalId", hospital.getHospitalId());
             responseBuilder.setMap(map);
         } else {
             responseBuilder.setError(new ResponseError("1", "没有你管理的医院"));
@@ -54,8 +53,8 @@ public class HospitalController extends AbstractController{
         return responseBuilder.getJson();
     }
 
-    @PutMapping(value = "/mine", consumes = "application/json")
-    public Object putMine(Hospital model) {
+    @PostMapping(value = "/mine")
+    public Object postMine(Hospital model) {
         int userId = (int)request.getSession().getAttribute("userId");
         Hospital hospital = hospitalDao.selectHospitalByAdminId(userId);
         if (hospital != null) {

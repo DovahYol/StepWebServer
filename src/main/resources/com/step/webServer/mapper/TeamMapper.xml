@@ -45,7 +45,7 @@
         where user_id = #{userId}
     </update>
     
-    <insert id="insertTeam">
+    <insert id="insertTeam"  useGeneratedKeys="true" keyProperty="teamId">
         insert into step.team(
                               step.team.team_name,
                               step.team.create_datetime,

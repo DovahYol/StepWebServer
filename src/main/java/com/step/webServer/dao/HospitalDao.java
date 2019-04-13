@@ -19,7 +19,7 @@ public class HospitalDao implements Dao{
     }
 
     public int insertOne(Hospital hospital) {
-        return sqlSession.insert("selectOneHospital", hospital);
+        return sqlSession.insert("insertHospital", hospital);
     }
 
     public Hospital selectHospitalByAdminId(int adminId) {
