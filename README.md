@@ -107,4 +107,6 @@
     - GET /user/unconfirmed
         - awaiting test
     - POST /user/unconfirmed
-        - awaiting test        
+        - awaiting test
+    - POST /user/createAdminAndHospital        
+        - awaiting test

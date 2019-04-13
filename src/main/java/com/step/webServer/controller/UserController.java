@@ -1,8 +1,10 @@
 package com.step.webServer.controller;
 
+import com.step.webServer.dao.HospitalDao;
 import com.step.webServer.dao.TeamDao;
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.ApplicationUser;
+import com.step.webServer.domain.Hospital;
 import com.step.webServer.model.UserModel;
 import com.step.webServer.service.FileService;
 import com.step.webServer.util.MapFactory;
@@ -31,6 +33,7 @@ public class UserController extends AbstractController{
     private UserDao userDao;
     private TeamDao teamDao;
     private FileService fileService;
+    private HospitalDao hospitalDao;
     private final MapFactory<String, Object> mapFactory;
     @Autowired
     HttpServletRequest request;
@@ -117,6 +120,32 @@ public class UserController extends AbstractController{
     @PostMapping("/unconfirmed")
     public Object postUnconfirmed(boolean confirmed, int userId) {
         userDao.updateConfirmed(confirmed, userId);
+        return responseBuilder.getJson();
+    }
+
+    @PostMapping("/createAdminAndHospital")
+    @Transactional
+    public Object createAdminAndHospital(
+            String hospitalName,
+            String address,
+            String userName,
+            String phoneNo,
+            String prcId) {
+
+        ApplicationUser applicationUser = new ApplicationUser();
+        applicationUser.setUsername(userName);
+        applicationUser.setPhoneNo(phoneNo);
+        applicationUser.setPrcId(prcId);
+        applicationUser.setRoleId(3);
+        applicationUser.setConfirmed(true);
+        userDao.insertOne(applicationUser);
+
+        Hospital hospital = new Hospital();
+        hospital.setHospitalName(hospitalName);
+        hospital.setAddress(address);
+        hospital.setAdminId(applicationUser.getUserId());
+        hospitalDao.insertOne(hospital);
+
         return responseBuilder.getJson();
     }
 
