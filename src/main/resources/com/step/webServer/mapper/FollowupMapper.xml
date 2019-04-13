@@ -121,8 +121,8 @@
     </select>
     <select id="riskfactorclass" resultType="map">
         select
-               riskfactorclass_id,
-               riskfactorclass_name
+               riskfactorclass_id as riskfactorclassId,
+               riskfactorclass_name as riskfactorclassName
         from step.riskfactorclass
     </select>
     <select id="riskfactor" resultType="map">
@@ -171,8 +171,8 @@
     </select>
     <select id="practicerx" resultType="map">
         select
-               A.practicerx_id,
-               A.practicerx_name,
+               A.practicerx_id as practicerxId,
+               A.practicerx_name as practicerxName,
                B.checked,
                B.note
         from step.practicerx AS A left join step.practicerx_followup AS B
