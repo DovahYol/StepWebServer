@@ -19,7 +19,7 @@ public class BprecordDao implements Dao{
         return this.sqlSession.selectOne("bpOverview", patientId);
     }
 
-    public List<Map<String, Object>> bpRecords(String patientId) {
+    public List<Bprecord> bpRecords(String patientId) {
         return this.sqlSession.selectList("bpRecords", patientId);
     }
 
