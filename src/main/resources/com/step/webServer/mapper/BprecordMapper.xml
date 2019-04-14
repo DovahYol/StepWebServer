@@ -5,17 +5,24 @@
 <mapper namespace="com.step.webServer.mapper.BprecordMapper">
     <cache-ref namespace="com.step.webServer.mapper" />
     <select id="bpRecords" resultType="map">
-        select create_datetime, sbp | dbp as bp, map, pulse_rate, meas_state, symptom
+        select
+               create_datetime AS createDatetime,
+               sbp,
+               dbp,
+               map,
+               pulse_rate AS pulseRate,
+               meas_state AS measState,
+               symptom
         from step.bprecord
         where patient_id = #{patientId}
     </select>
     <select id="bpOverview" resultType="map">
-        select DATEDIFF(max(create_datetime), min(create_datetime)) as num_meas_date,
-               count(*) as num_meas,
-               max(sbp) as max_sbp,
-               avg(sbp) as mean_sbp,
-               max(dbp) as max_dbp,
-               avg(dbp) as mean_dbp
+        select DATEDIFF(max(create_datetime), min(create_datetime)) as numMeasDate,
+               count(*) as numMeas,
+               max(sbp) as maxSbp,
+               avg(sbp) as meanSbp,
+               max(dbp) as maxDbp,
+               avg(dbp) as meanDbp
         from step.bprecord
         where patient_id = #{patientId}
     </select>
