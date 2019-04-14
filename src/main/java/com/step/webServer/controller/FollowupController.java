@@ -148,6 +148,14 @@ public class FollowupController extends AbstractController {
         return responseBuilder.getJson();
     }
 
+    @GetMapping("/riskfactor_new")
+    public Object riskfactorNew(String riskfactorclassId) {
+        Map<String, Object> map = mapFactory.create();
+        responseBuilder.setMap(map);
+        map.put("riskfactors", followupDao.riskfactorNew(riskfactorclassId));
+        return responseBuilder.getJson();
+    }
+
     @PutMapping("/riskfactor")
     @Transactional
     public Object putRiskfactor(String followupId, List<RiskfactorModel> riskfactors) {
@@ -184,6 +192,14 @@ public class FollowupController extends AbstractController {
         Map<String, Object> map = mapFactory.create();
         responseBuilder.setMap(map);
         map.put("practiceRxes", followupDao.practicerx(Integer.valueOf(followupId)));
+        return responseBuilder.getJson();
+    }
+
+    @GetMapping("/practicerx_new")
+    public Object practicerxNew() {
+        Map<String, Object> map = mapFactory.create();
+        responseBuilder.setMap(map);
+        map.put("practiceRxes", followupDao.practicerxNew());
         return responseBuilder.getJson();
     }
 

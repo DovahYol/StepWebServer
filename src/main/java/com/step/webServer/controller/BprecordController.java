@@ -21,7 +21,7 @@ public class BprecordController extends AbstractController {
 
 
     @PostMapping
-    public Object postBprecord(@RequestBody Bprecord bprecord) {
+    public Object postBprecord(Bprecord bprecord) {
         bprecord.setCreateDatetime(LocalDateTime.now());
         bprecordDao.insertOne(bprecord);
         return responseBuilder.getJson();

@@ -63,6 +63,12 @@ public class FollowupDao implements Dao {
         return this.sqlSession.selectList("riskfactor", params);
     }
 
+    public List<Map> riskfactorNew(String riskfactorclassId) {
+        Map<String, Object> params = mapFactory.create();
+        params.put("riskfactorclassId", riskfactorclassId);
+        return this.sqlSession.selectList("riskfactorNew", params);
+    }
+
     public RiskfactorFollowup riskfactorFollowups (String riskfactorId, int followupId) {
         Map<String, Object> params = mapFactory.create();
         params.put("riskfactorId", riskfactorId);
@@ -92,6 +98,10 @@ public class FollowupDao implements Dao {
 
     public List<Map<String, Object>> practicerx (int followupId) {
         return this.sqlSession.selectList("practicerx", followupId);
+    }
+
+    public List<Map<String, Object>> practicerxNew () {
+        return this.sqlSession.selectList("practicerxNew");
     }
 
     public PracticerxFollowup practicerxFollowup (PracticerxFollowup practicerxFollowup) {
