@@ -28,14 +28,10 @@ public class TemplateController extends AbstractController{
         return responseBuilder.getJson();
     }
 
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     @Transactional
-    public Object deleteTemplatesById(List<String> contentIds) throws Exception {
-        for (String contentId :
-                contentIds) {
-            int numDelete = templateDao.deleteTemplatesById(contentId);
-            if (numDelete != 1) throw new Exception("删除模板数不为1");
-        }
+    public Object deleteTemplatesById(String contentId) throws Exception {
+        int numDelete = templateDao.deleteTemplatesById(contentId);
         return responseBuilder.getJson();
     }
 
