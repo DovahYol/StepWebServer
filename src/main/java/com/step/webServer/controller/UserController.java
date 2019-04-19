@@ -8,6 +8,7 @@ import com.step.webServer.domain.Hospital;
 import com.step.webServer.model.UserModel;
 import com.step.webServer.service.FileService;
 import com.step.webServer.util.MapFactory;
+import com.step.webServer.util.ResponseError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,8 +82,14 @@ public class UserController extends AbstractController{
     public void downloadMyPicture(HttpServletResponse response) throws IOException {
         int userId = (int) request.getSession().getAttribute("userId");
         ApplicationUser user = userDao.selectByUserId(userId);
+        File filePath = new File(user.getPicturePath());
+        if (!filePath.exists()) {
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().print("{\"code\": \"待定\", \"message\": \"不存在该图片\" }");
+            return;
+        }
         FileCopyUtils.copy(
-                new FileInputStream(new File(user.getPicturePath())),
+                new FileInputStream(filePath),
                 response.getOutputStream()
         );
     }
@@ -100,6 +107,10 @@ public class UserController extends AbstractController{
 
     @PostMapping(value = "/uploadMyPicture")
     public Object uploadMyPicture(MultipartFile picture) throws IOException {
+        if (picture == null) {
+            responseBuilder.setError(new ResponseError("待定", "picture字段应绑定一张图片"));
+            return responseBuilder.getJson();
+        }
         int userId = (int) request.getSession().getAttribute("userId");
         ApplicationUser user = userDao.selectByUserId(userId);
         String path = fileService.savePicture(picture);
