@@ -106,14 +106,14 @@ public class UserController extends AbstractController{
     }
 
     @PostMapping(value = "/uploadMyPicture")
-    public Object uploadMyPicture(MultipartFile picture) throws IOException {
-        if (picture == null) {
+    public Object uploadMyPicture(MultipartFile file) throws IOException {
+        if (file == null) {
             responseBuilder.setError(new ResponseError("待定", "picture字段应绑定一张图片"));
             return responseBuilder.getJson();
         }
         int userId = (int) request.getSession().getAttribute("userId");
         ApplicationUser user = userDao.selectByUserId(userId);
-        String path = fileService.savePicture(picture);
+        String path = fileService.savePicture(file);
         user.setPicturePath(path);
         userDao.updateOne(user);
         return responseBuilder.getJson();
