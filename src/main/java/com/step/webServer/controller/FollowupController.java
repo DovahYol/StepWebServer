@@ -11,14 +11,12 @@ import com.step.webServer.util.ResponseError;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -158,18 +156,52 @@ public class FollowupController extends AbstractController {
 
     @PutMapping("/riskfactor")
     @Transactional
-    public Object putRiskfactor(String followupId, List<RiskfactorModel> riskfactors) {
-        int temp = Integer.valueOf(followupId);
+    public Object putRiskfactor(@RequestBody PutRiskfactorModel putRiskfactorModel) {
+        String patientId = putRiskfactorModel.getPatientId();
+        String createDate = putRiskfactorModel.getCreateDate();
+        ArrayList<RiskfactorModel> riskfactorModels = putRiskfactorModel.getRiskfactors();
+        int userId = (int)request.getSession().getAttribute("userId");
+        int parsedPatientId;
+        LocalDate parsedDate;
+
+        try {
+            parsedPatientId =  Integer.valueOf(patientId);
+        } catch (Exception ex) {
+            ResponseError error = new ResponseError("待定", "patientId应为数字");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
+        }
+
+        try {
+            parsedDate = LocalDate.parse(createDate);
+        } catch (Exception ex) {
+            ResponseError error = new ResponseError("待定", "createDate应为yyyy-MM-dd");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
+        }
+
+        Followup followup = followupDao.followup(parsedPatientId, parsedDate, userId);
+        if (followup == null) {
+            followup = new Followup();
+            followup.setPatientId(parsedPatientId);
+            followup.setCreateDate(parsedDate);
+            followup.setUserId(userId);
+            followupDao.insertFollowup(followup);
+        }
         for (RiskfactorModel rc :
-                riskfactors) {
+                riskfactorModels) {
             RiskfactorFollowup riskfactorFollowup =
-                    followupDao.riskfactorFollowups(rc.getRiskfactorId(), temp);
+                    followupDao.riskfactorFollowups(rc.getRiskfactorId(), followup.getFollowupId());
             if (riskfactorFollowup != null) {
-                followupDao.updateRiskfactorFollowup(rc.getRiskfactorId(), temp, rc.isChecked());
+                followupDao.updateRiskfactorFollowup(rc.getRiskfactorId(), followup.getFollowupId(), rc.isChecked());
             }else {
-                followupDao.insertRiskfactorFollowup(rc.getRiskfactorId(), temp, rc.isChecked());
+                followupDao.insertRiskfactorFollowup(rc.getRiskfactorId(), followup.getFollowupId(), rc.isChecked());
             }
         }
+
+        Map<String, Object> params = mapFactory.create();
+        params.put("followupId", followup.getFollowupId());
+        responseBuilder.setMap(params);
         return responseBuilder.getJson();
     }
 
@@ -212,27 +244,60 @@ public class FollowupController extends AbstractController {
                 userId);
         if (followup != null) {
             copyMgtPlanModelToFollowup(mgtPlanModel, followup);
-            int numUpdate = followupDao.updateFollowup(followup);
-            if (numUpdate != 1) throw new Exception("更新条数不为1");
+            followupDao.updateFollowup(followup);
         }else {
             followup = new Followup();
             copyMgtPlanModelToFollowup(mgtPlanModel, followup);
             followup.setCreateDate(LocalDate.parse(mgtPlanModel.getCreateDate()));
             followup.setPatientId(Integer.valueOf(mgtPlanModel.getPatientId()));
             followup.setUserId(userId);
-            int numInsert = followupDao.insertFollowup(followup);
-            if (numInsert != 1) throw new Exception("插入条数不为1");
+            followupDao.insertFollowup(followup);
         }
+
+        Map<String, Object> params = mapFactory.create();
+        params.put("followupId", followup.getFollowupId());
+
+        responseBuilder.setMap(params);
         return responseBuilder.getJson();
     }
 
     @PutMapping("/practicerx")
-    public Object putPracticerx(String followupId, List<PracticeRxModel> practiceRxes) {
-        int temp = Integer.valueOf(followupId);
+    public Object putPracticerx(@RequestBody PutPracticerxModel putPracticerxModel) {
+        int userId = (int)request.getSession().getAttribute("userId");
+        int parsedPatientId;
+        LocalDate parsedDate;
+
+        try {
+            parsedPatientId =  Integer.valueOf(putPracticerxModel.getPatientId());
+        } catch (Exception ex) {
+            ResponseError error = new ResponseError("待定", "patientId应为数字");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
+        }
+
+        try {
+            parsedDate = LocalDate.parse(putPracticerxModel.getCreateDate());
+        } catch (Exception ex) {
+            ResponseError error = new ResponseError("待定", "createDate应为yyyy-MM-dd");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
+        }
+
+        Followup followup = followupDao.followup(parsedPatientId, parsedDate, userId);
+
+        if (followup == null) {
+            followup = new Followup();
+            followup.setUserId(userId);
+            followup.setPatientId(parsedPatientId);
+            followup.setCreateDate(parsedDate);
+
+            followupDao.insertFollowup(followup);
+        }
+
         for (PracticeRxModel rc:
-                practiceRxes) {
+                putPracticerxModel.getPracticeRxes()) {
             PracticerxFollowup practicerxFollowup = new PracticerxFollowup();
-            practicerxFollowup.setFollowupId(temp);
+            practicerxFollowup.setFollowupId(followup.getFollowupId());
             practicerxFollowup.setPracticerxId(Integer.valueOf(rc.getPracticerxId()));
             practicerxFollowup.setChecked(rc.getChecked());
             practicerxFollowup.setNote(rc.getNote());
@@ -242,6 +307,11 @@ public class FollowupController extends AbstractController {
                 followupDao.insertPracticerxFollowup(practicerxFollowup);
             }
         }
+
+        Map<String, Object> params = mapFactory.create();
+        params.put("followupId", followup.getFollowupId());
+
+        responseBuilder.setMap(params);
         return responseBuilder.getJson();
     }
 
@@ -263,6 +333,42 @@ public class FollowupController extends AbstractController {
         Map<String, Object> map = mapFactory.create();
         map.put("followups", followupDao.followupPlan(nextDate));
         responseBuilder.setMap(map);
+        return responseBuilder.getJson();
+    }
+
+    @GetMapping("/getFollowupId")
+    public Object getFollowupId(String patientId, String date) {
+        int userId = (int)request.getSession().getAttribute("userId");
+        int parsedPatientId;
+        LocalDate parsedDate;
+
+        try {
+            parsedPatientId =  Integer.valueOf(patientId);
+        } catch (Exception ex) {
+            ResponseError error = new ResponseError("待定", "patientId应为数字");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
+        }
+
+        try {
+            parsedDate = LocalDate.parse(date);
+        } catch (Exception ex) {
+            ResponseError error = new ResponseError("待定", "createDate应为yyyy-MM-dd");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
+        }
+
+        Followup followup = followupDao.followup(parsedPatientId, parsedDate, userId);
+
+        Map<String, Object> params = mapFactory.create();
+        if (followup == null) {
+            params.put("followupId", null);
+        }else {
+            params.put("followupId", followup.getFollowupId());
+        }
+
+        responseBuilder.setMap(params);
+
         return responseBuilder.getJson();
     }
 }

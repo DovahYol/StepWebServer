@@ -38,7 +38,7 @@
             user_id = #{userId}
         where followup_id = #{followupId}
     </update>
-    <insert id="insertSingleFollowup">
+    <insert id="insertSingleFollowup" useGeneratedKeys="true" keyProperty="followupId">
         insert into step.followup
           (create_date,
            complaint,
@@ -192,7 +192,7 @@
             A.practicerx_name as practicerxName
         from step.practicerx AS A
     </select>
-    <select id="practicerxFollowup">
+    <select id="practicerxFollowup" resultType="practicerxFollowup">
         select * from step.practicerx_followup
         where practicerx_id = #{practicerxId}
         and followup_id = #{followupId}
