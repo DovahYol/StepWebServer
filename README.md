@@ -108,5 +108,5 @@
         - awaiting test
     - POST /user/unconfirmed
         - awaiting test
-    - POST /user/createAdminAndHospital        
+    - PUT /user/createAdminAndHospital        
         - awaiting test
