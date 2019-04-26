@@ -7,7 +7,7 @@
     <select id="selectAllHospitals" resultType="hospital">
         select * from hospital
     </select>
-    <insert id="insertHospital">
+    <insert id="insertHospital" useGeneratedKeys="true" keyColumn="hospitalId">
         insert into hospital
                     (hospital_name, address, admin_id)
                     values
@@ -17,10 +17,36 @@
         select * from step.hospital
         where admin_id = #{adminId}
     </select>
+    <select id="selectHospitalByHospitalId" resultType="hospital">
+        select * from step.hospital
+        where hospital_id = #{hospitalId}
+    </select>
     <update id="updateHospitalByAdminId">
         update step.hospital
         set step.hospital.address = #{address},
             step.hospital.hospital_name = #{hospitalName}
         where step.hospital.admin_id = #{adminId}
+    </update>
+    <update id="updateHospitalByHospitalId">
+        update hospital
+        set address = #{address},
+            hospital_name = #{hospitalName},
+            admin_id = #{adminId}
+        where hospital_id = #{hospitalId}
+    </update>
+
+    <update id="insertOrUpdateOneHospital">
+        insert INTO hospital
+        (hospital_name,
+         address,
+         admin_id)
+        VALUES
+        (#{hospitalName},
+         #{address},
+         #{adminId})
+        ON DUPLICATE KEY UPDATE
+            hospital_name = #{hospitalName},
+            address = #{address},
+            admin_id =  #{adminId}
     </update>
 </mapper>

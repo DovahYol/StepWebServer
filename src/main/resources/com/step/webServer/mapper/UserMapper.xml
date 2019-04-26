@@ -117,4 +117,55 @@
         update user set confirmed = #{confirmed}
         where user_id = #{userId}
     </update>
+
+    <update id="insertOrUpdateOneUser" useGeneratedKeys="true" keyColumn="userId">
+        insert INTO user
+            (username,
+             password,
+             gender,
+             age,
+             birthday,
+             prc_id,
+             department,
+             position,
+             license_id,
+             phone_no,
+             picture_path,
+             confirmed,
+             team_id,
+             hospital_id,
+             role_id)
+        VALUES
+            (#{username},
+             #{password},
+             #{gender},
+             #{age},
+             #{birthday},
+             #{prcId},
+             #{department},
+             #{position},
+             #{licenseId},
+             #{phoneNo},
+             #{picturePath},
+             #{confirmed},
+             #{teamId},
+             #{hospitalId},
+             #{roleId})
+        ON DUPLICATE KEY UPDATE
+            username = #{username},
+            password = #{password},
+            gender =  #{gender},
+            age =  #{age},
+            birthday =       #{birthday},
+            prc_id =  #{prcId},
+            department =   #{department},
+            position =    #{position},
+            license_id =   #{licenseId},
+            phone_no =      #{phoneNo},
+            picture_path =   #{picturePath},
+            confirmed =  #{confirmed},
+            team_id =    #{teamId},
+            hospital_id =  #{hospitalId},
+            role_id =    #{roleId}
+    </update>
 </mapper>

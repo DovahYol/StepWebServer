@@ -4,6 +4,7 @@ import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.ApplicationUser;
 import com.step.webServer.model.UserModel;
 import com.step.webServer.service.FileService;
+import com.step.webServer.util.MapFactory;
 import com.step.webServer.util.ResponseError;
 import com.step.webServer.util.ResponseErrorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,28 +14,34 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping(produces = "application/json;charset=UTF-8")
 public class AuthController extends AbstractController{
 
-    private UserDao userDao;
-    private FileService fileService;
-    private ResponseErrorFactory responseErrorFactory;
+    private final UserDao userDao;
+    private final FileService fileService;
+    private final ResponseErrorFactory responseErrorFactory;
+    private final MapFactory<String, Object> mapFactory;
     @Autowired
     HttpServletRequest request;
-    @Autowired
-    BCryptPasswordEncoder encoder;
 
-    public AuthController(UserDao userDao,FileService fileService, ResponseErrorFactory responseErrorFactory) {
+    public AuthController(UserDao userDao, FileService fileService, ResponseErrorFactory responseErrorFactory, MapFactory<String, Object> mapFactory) {
         this.userDao = userDao;
         this.fileService = fileService;
         this.responseErrorFactory = responseErrorFactory;
+        this.mapFactory = mapFactory;
     }
 
     @PostMapping("/login")
     public Object login(String username, String password) {
         ApplicationUser appUser = userDao.selectByUsername(username);
+        if (password == null || !password.equals(appUser.getPassword())) {
+            ResponseError error = new ResponseError("待定", "登录密码不正确");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
+        }
         request.getSession().setAttribute("username", username);
         request.getSession().setAttribute("userId", appUser.getUserId());
         return responseBuilder.getJson();
@@ -65,7 +72,7 @@ public class AuthController extends AbstractController{
         String path = fileService.savePicture(userModel.getPicture());
         ApplicationUser applicationUser = new ApplicationUser();
         applicationUser.setUsername(userModel.getUsername());
-        applicationUser.setPassword(encoder.encode(userModel.getPassword()));
+        applicationUser.setPassword(userModel.getPassword());
         applicationUser.setGender(userModel.getGender());
         applicationUser.setAge(userModel.getAge());
         applicationUser.setPrcId(userModel.getPrcId());

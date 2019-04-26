@@ -35,7 +35,9 @@
             medicine_rx = #{medicineRx},
             is_referral = #{isReferral},
             patient_id = #{patientId},
-            user_id = #{userId}
+            user_id = #{userId},
+            next_datetime = #{nextDatetime},
+            next_confirmed = #{nextConfirmed}
         where followup_id = #{followupId}
     </update>
     <insert id="insertSingleFollowup" useGeneratedKeys="true" keyProperty="followupId">
@@ -63,7 +65,9 @@
            medicine_rx,
            is_referral,
            patient_id,
-           user_id
+           user_id,
+           next_datetime,
+           next_confirmed
            )
         values (
              #{createDate},
@@ -89,7 +93,9 @@
              #{medicineRx},
              #{isReferral},
              #{patientId},
-             #{userId}
+             #{userId},
+             #{nextDatetime},
+             #{nextConfirmed}
              )
     </insert>
     <select id="medicalRecord" resultType="map">

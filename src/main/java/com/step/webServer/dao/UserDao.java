@@ -64,4 +64,8 @@ public class UserDao implements Dao{
         params.put("userId", userId);
         return this.sqlSession.update("updateConfirmed", params);
     }
+
+    public int insertOrUpdateOne(ApplicationUser user) {
+        return this.sqlSession.update("insertOrUpdateOneUser", user);
+    }
 }

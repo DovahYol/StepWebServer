@@ -26,7 +26,18 @@ public class HospitalDao implements Dao{
         return sqlSession.selectOne("selectHospitalByAdminId", adminId);
     }
 
+    public Hospital selectHospitalByHospitalId(int hospitalId) {
+        return sqlSession.selectOne("selectHospitalByHospitalId", hospitalId);
+    }
+
     public int updateHospitalByAdminId(Hospital hospital) {
         return sqlSession.update("updateHospitalByAdminId", hospital);
     }
-}
+
+    public int updateHospitalByHospitalId(Hospital hospital) {
+        return sqlSession.update("updateHospitalByHospitalId", hospital);
+    }
+
+    public int insertOrUpdateOne(Hospital hospital) {
+        return sqlSession.update("insertOrUpdateOneHospital", hospital);
+    }}

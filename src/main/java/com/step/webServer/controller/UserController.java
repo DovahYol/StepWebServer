@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,21 +28,19 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/user", produces = "application/json;charset=UTF-8")
 public class UserController extends AbstractController{
-    private UserDao userDao;
-    private TeamDao teamDao;
-    private FileService fileService;
-    private HospitalDao hospitalDao;
+    private final UserDao userDao;
+    private final TeamDao teamDao;
+    private final FileService fileService;
+    private final HospitalDao hospitalDao;
     private final MapFactory<String, Object> mapFactory;
     @Autowired
     HttpServletRequest request;
 
-    @Autowired
-    BCryptPasswordEncoder encoder;
-
-    public UserController(UserDao userDao, TeamDao teamDao, FileService fileService, MapFactory<String, Object> mapFactory) {
+    public UserController(UserDao userDao, TeamDao teamDao, FileService fileService, HospitalDao hospitalDao, MapFactory<String, Object> mapFactory) {
         this.userDao = userDao;
         this.teamDao = teamDao;
         this.fileService = fileService;
+        this.hospitalDao = hospitalDao;
         this.mapFactory = mapFactory;
     }
 
@@ -99,7 +94,7 @@ public class UserController extends AbstractController{
     public Object postMyself(UserModel userModel) throws IOException {
         int userId = (int) request.getSession().getAttribute("userId");
         ApplicationUser user = userDao.selectByUserId(userId);
-        user.setPassword(encoder.encode(userModel.getPassword()));
+        user.setPassword(userModel.getPassword());
         user.setPhoneNo(userModel.getPhoneNo());
         userDao.updateOne(user);
         return responseBuilder.getJson();
@@ -134,28 +129,43 @@ public class UserController extends AbstractController{
         return responseBuilder.getJson();
     }
 
-    @PostMapping("/createAdminAndHospital")
+    @PutMapping("/putAdminAndHospital")
     @Transactional
-    public Object createAdminAndHospital(
+    public Object putAdminAndHospital(
             String hospitalName,
             String address,
-            String userName,
+            String username,
             String phoneNo,
             String prcId) {
 
-        ApplicationUser applicationUser = new ApplicationUser();
-        applicationUser.setUsername(userName);
+        ApplicationUser applicationUser = userDao.selectByUsername(username);
+        if (applicationUser == null) {
+            applicationUser = new ApplicationUser();
+        }
+        applicationUser.setUsername(username);
         applicationUser.setPhoneNo(phoneNo);
         applicationUser.setPrcId(prcId);
         applicationUser.setRoleId(3);
         applicationUser.setConfirmed(true);
-        userDao.insertOne(applicationUser);
+        userDao.insertOrUpdateOne(applicationUser);
 
-        Hospital hospital = new Hospital();
+        Hospital hospital = hospitalDao.selectHospitalByAdminId(applicationUser.getUserId());
+        if (hospital == null) {
+            hospital = new Hospital();
+        }
         hospital.setHospitalName(hospitalName);
         hospital.setAddress(address);
         hospital.setAdminId(applicationUser.getUserId());
-        hospitalDao.insertOne(hospital);
+        hospitalDao.insertOrUpdateOne(hospital);
+
+        applicationUser.setHospitalId(hospital.getHospitalId());
+        userDao.updateOne(applicationUser);
+
+        Map<String, Object> params = mapFactory.create();
+        params.put("hospitalId", hospital.getHospitalId());
+        params.put("userId", applicationUser.getUserId());
+
+        responseBuilder.setMap(params);
 
         return responseBuilder.getJson();
     }
