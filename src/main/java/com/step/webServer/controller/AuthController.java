@@ -69,8 +69,28 @@ public class AuthController extends AbstractController{
             responseBuilder.setError(responseErrorFactory.create("未定", "roleId为null"));
             return responseBuilder.getJson();
         }
-        String path = fileService.savePicture(userModel.getPicture());
+        int hospitalIdInt;
+        try{
+            hospitalIdInt = Integer.valueOf(userModel.getHospitalId());
+        }catch (Exception ex) {
+            ResponseError error = new ResponseError("待定", "hospitalId应为数字");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
+        }
+        int roleIdInt;
+        try {
+            roleIdInt = Integer.valueOf(userModel.getRoleId());
+        }catch (Exception ex) {
+            ResponseError error = new ResponseError("待定", "roleId应为数字");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
+        }
+
         ApplicationUser applicationUser = new ApplicationUser();
+        if (userModel.getPicture() != null) {
+            String path = fileService.savePicture(userModel.getPicture());
+            applicationUser.setPicturePath(path);
+        }
         applicationUser.setUsername(userModel.getUsername());
         applicationUser.setPassword(userModel.getPassword());
         applicationUser.setGender(userModel.getGender());
@@ -79,10 +99,10 @@ public class AuthController extends AbstractController{
         applicationUser.setDepartment(userModel.getDepartment());
         applicationUser.setLicenseId(userModel.getLicenseId());
         applicationUser.setPhoneNo(userModel.getPhoneNo());
-        applicationUser.setHospitalId(Integer.valueOf(userModel.getHospitalId()));
-        applicationUser.setRoleId(Integer.valueOf(userModel.getRoleId()));
+        applicationUser.setHospitalId(hospitalIdInt);
+        applicationUser.setRoleId(roleIdInt);
         applicationUser.setConfirmed(false);
-        applicationUser.setPicturePath(path);
+
         if (userDao.containsUser(userModel.getUsername())) {
             ResponseError error = new ResponseError("未定","该用户已存在");
             responseBuilder.setError(error);
