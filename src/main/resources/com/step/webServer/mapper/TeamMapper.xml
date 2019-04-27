@@ -62,5 +62,10 @@
         delete from step.team
         where step.team.team_id = #{teamId}
     </delete>
+    <select id="getTeamNumByAdminId" resultType="int">
+        select count(*)
+        from team
+        where admin_id = #{adminId}
+    </select>
 </mapper>
 

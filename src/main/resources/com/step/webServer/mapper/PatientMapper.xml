@@ -97,4 +97,9 @@
         from step.patient
         where patient_id = #{patientId}
     </select>
+    <select id="getPatientNumByAdminId" resultType="int">
+        select count(*) from patient as A, team as B
+        where A.team_id = B.team_id
+        and B.admin_id = #{adminId}
+    </select>
 </mapper>

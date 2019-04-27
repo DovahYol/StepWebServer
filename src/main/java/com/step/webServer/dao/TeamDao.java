@@ -74,4 +74,8 @@ public class TeamDao implements Dao  {
         params.put("teamId", teamId);
         return sqlSession.insert("deleteTeam", params);
     }
+
+    public int getTeamNumByAdminId(int adminId) {
+        return sqlSession.selectOne("getTeamNumByAdminId", adminId);
+    }
 }
