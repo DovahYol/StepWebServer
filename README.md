@@ -109,4 +109,4 @@
     - POST /user/unconfirmed
         - awaiting test
     - PUT /user/createAdminAndHospital        
-        - awaiting test
+    - GET /hospital/getHospitalInfo
