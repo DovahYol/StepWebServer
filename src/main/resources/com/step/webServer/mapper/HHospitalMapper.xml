@@ -35,7 +35,7 @@
         where hospital_id = #{hospitalId}
     </update>
 
-    <update id="insertOrUpdateOneHospital">
+    <update id="insertOrUpdateOneHospital" useGeneratedKeys="true" keyProperty="hospitalId">
         insert INTO hospital
         (hospital_name,
          address,

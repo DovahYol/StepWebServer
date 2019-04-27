@@ -118,7 +118,7 @@
         where user_id = #{userId}
     </update>
 
-    <update id="insertOrUpdateOneUser" useGeneratedKeys="true" keyColumn="userId">
+    <update id="insertOrUpdateOneUser" useGeneratedKeys="true" keyProperty="userId">
         insert INTO user
             (username,
              password,
