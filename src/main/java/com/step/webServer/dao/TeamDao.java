@@ -38,7 +38,7 @@ public class TeamDao implements Dao  {
         List<Map<String, Object>> teams = sqlSession.selectList("teams", keyword);
         for (int i = 0; i < teams.size(); i++) {
             Map<String , Object> team = teams.get(i);
-            int teamId = (int) teams.get(i).get("teamId");
+            long teamId = (long) teams.get(i).get("teamId");
             team.put("no", i + 1);
             team.put("doctorNames", doctors(teamId));
             team.put("nurseNames", nurses(teamId));
@@ -46,11 +46,11 @@ public class TeamDao implements Dao  {
         return teams;
     }
 
-    public List<String> doctors(int teamId) {
+    public List<String> doctors(long teamId) {
         return sqlSession.selectList("doctorsByTeamId", teamId);
     }
 
-    public List<String> nurses(int teamId) {
+    public List<String> nurses(long teamId) {
         return sqlSession.selectList("nursesByTeamId", teamId);
     }
 

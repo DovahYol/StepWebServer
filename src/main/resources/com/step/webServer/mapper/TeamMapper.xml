@@ -16,7 +16,10 @@
     </select>
     <select id="teams" resultType="map">
         select
-          team_id, team_name, A.create_datetime, count(*) AS num_mgt_patient
+          team_id AS teamId,
+          team_name AS teamName,
+          A.create_datetime AS createDatetime,
+          count(*) AS numMgtPatient
         from step.team AS A left join step.patient using(team_id)
         group by team_id, team_name, A.create_datetime
     </select>
