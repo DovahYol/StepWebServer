@@ -21,6 +21,12 @@
           A.create_datetime AS createDatetime,
           count(*) AS numMgtPatient
         from step.team AS A left join step.patient using(team_id)
+        where 1
+        <if test="keyword != null and keyword != ''">
+            and (
+            team_name like concat('%', #{keyword}, '%')
+            )
+        </if>
         group by team_id, team_name, A.create_datetime
     </select>
 

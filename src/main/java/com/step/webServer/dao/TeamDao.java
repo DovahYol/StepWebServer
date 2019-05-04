@@ -35,7 +35,10 @@ public class TeamDao implements Dao  {
             PageHelper.startPage(pageNum, pageSize);
         }
 
-        List<Map<String, Object>> teams = sqlSession.selectList("teams", keyword);
+        Map<String, Object> params = mapFactory.create();
+        params.put("keyword", keyword);
+
+        List<Map<String, Object>> teams = sqlSession.selectList("teams", params);
         for (int i = 0; i < teams.size(); i++) {
             Map<String , Object> team = teams.get(i);
             long teamId = (long) teams.get(i).get("teamId");
