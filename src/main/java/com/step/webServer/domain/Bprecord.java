@@ -21,6 +21,9 @@ public class Bprecord  implements Domain{
 
     private Integer patientId;
 
+    //Model用，用于接受前端传过来的时间
+    private String measureDatetime;
+
     public Integer getBprecordId() {
         return bprecordId;
     }
@@ -91,5 +94,13 @@ public class Bprecord  implements Domain{
 
     public void setPatientId(Integer patientId) {
         this.patientId = patientId;
+    }
+
+    public String getMeasureDatetime() {
+        return measureDatetime;
+    }
+
+    public void setMeasureDatetime(String measureDatetime) {
+        this.measureDatetime = measureDatetime;
     }
 }
