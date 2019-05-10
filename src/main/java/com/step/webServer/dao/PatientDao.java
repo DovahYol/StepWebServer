@@ -73,4 +73,8 @@ public class PatientDao implements Dao{
         return sqlSession.selectOne("getPatientNumByAdminId", adminId);
     }
 
+    public List<Integer> getPatientIdsByTeamId(Integer teamId) {
+        return sqlSession.selectList("getPatientIdsByTeamId", teamId);
+    }
+
 }

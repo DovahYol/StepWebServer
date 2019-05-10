@@ -1,5 +1,6 @@
 package com.step.webServer.controller;
 
+import com.step.webServer.dao.PatientDao;
 import com.step.webServer.dao.TeamDao;
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.Team;
@@ -21,14 +22,16 @@ public class TeamController extends AbstractController  {
     private final TeamDao teamDao;
     private final UserDao userDao;
     private final MapFactory<String, Object> mapFactory;
+    private final PatientDao patientDao;
 
     @Autowired
     HttpServletRequest request;
 
-    public TeamController(TeamDao teamDao, UserDao userDao, MapFactory<String, Object> mapFactory) {
+    public TeamController(TeamDao teamDao, UserDao userDao, MapFactory<String, Object> mapFactory, PatientDao patientDao) {
         this.teamDao = teamDao;
         this.userDao = userDao;
         this.mapFactory = mapFactory;
+        this.patientDao = patientDao;
     }
 
     @GetMapping
@@ -154,6 +157,21 @@ public class TeamController extends AbstractController  {
             List<Map<String, Object>> local = userDao.nursesAvailable();
             params.put("users", local);
         }
+        responseBuilder.setMap(params);
+        return responseBuilder.getJson();
+    }
+
+    @GetMapping("/allPatientsByTeamId")
+    public Object allPatientsByTeamId(String teamId) {
+        int teamIdInt = Integer.valueOf(teamId);
+        List<Integer> patientIds = patientDao.getPatientIdsByTeamId(teamIdInt);
+        List<String> patientIdsStr = new ArrayList<>();
+        for (Integer patientId :
+                patientIds) {
+            patientIdsStr.add(patientId.toString());
+        }
+        Map<String, Object> params = mapFactory.create();
+        params.put("patientIds", patientIdsStr);
         responseBuilder.setMap(params);
         return responseBuilder.getJson();
     }

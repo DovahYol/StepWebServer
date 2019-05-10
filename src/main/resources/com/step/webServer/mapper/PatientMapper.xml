@@ -102,4 +102,7 @@
         where A.team_id = B.team_id
         and B.admin_id = #{adminId}
     </select>
+    <select id="getPatientIdsByTeamId" resultType="int">
+        select patient_id from step.patient where team_id = #{teamId}
+    </select>
 </mapper>
