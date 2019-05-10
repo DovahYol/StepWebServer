@@ -110,3 +110,4 @@
         - awaiting test
     - PUT /user/createAdminAndHospital        
     - GET /hospital/getHospitalInfo
+    - GET /team/allPatientsByTeamId
