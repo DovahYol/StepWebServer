@@ -57,7 +57,7 @@ public class TeamDao implements Dao  {
         return sqlSession.selectList("nursesByTeamId", teamId);
     }
 
-    public int addMember(int teamId, int userId) {
+    public int addMember(long teamId, long userId) {
         Map<String, Object> map = mapFactory.create();
         map.put("teamId", teamId);
         map.put("userId", userId);

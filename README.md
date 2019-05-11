@@ -111,3 +111,4 @@
     - PUT /user/createAdminAndHospital        
     - GET /hospital/getHospitalInfo
     - GET /team/allPatientsByTeamId
+    - POST /team/createAndAddMember

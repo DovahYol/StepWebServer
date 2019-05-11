@@ -4,12 +4,11 @@ import com.step.webServer.dao.PatientDao;
 import com.step.webServer.dao.TeamDao;
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.Team;
+import com.step.webServer.model.TeamCreateModel;
 import com.step.webServer.util.MapFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -128,15 +127,10 @@ public class TeamController extends AbstractController  {
 
     @PostMapping("/create")
     public Object create(String teamName) {
-        int userId = (int) request.getSession().getAttribute("userId");
-        Map<String, Object> params = mapFactory.create();
-        params.put("teamName", teamName);
-        params.put("adminId", userId);
-        params.put("teamId", null);
-        teamDao.insertTeam(params);
-        params.remove("teamName");
-        params.remove("adminId");
+        Map<String, Object> params = createTeam(teamName);
+
         responseBuilder.setMap(params);
+
         return responseBuilder.getJson();
     }
 
@@ -174,5 +168,36 @@ public class TeamController extends AbstractController  {
         params.put("patientIds", patientIdsStr);
         responseBuilder.setMap(params);
         return responseBuilder.getJson();
+    }
+
+    @PostMapping("/createAndAddMember")
+    @Transactional
+    public Object createAndAddMember(@RequestBody TeamCreateModel model) {
+        Map<String, Object> params = createTeam(model.getTeamName());
+
+        long teamIdInt = (long)params.get("teamId");
+
+        for (String memberId:
+             model.getUserIds()) {
+            long memberIdInt = Integer.valueOf(memberId);
+            teamDao.addMember(teamIdInt, memberIdInt);
+        }
+
+        responseBuilder.setMap(params);
+
+        return responseBuilder.getJson();
+    }
+
+    private Map<String, Object> createTeam(String teamName) {
+        int userId = (int) request.getSession().getAttribute("userId");
+        Map<String, Object> params = mapFactory.create();
+        params.put("teamName", teamName);
+        params.put("adminId", userId);
+        params.put("teamId", null);
+        teamDao.insertTeam(params);
+        params.remove("teamName");
+        params.remove("adminId");
+
+        return params;
     }
 }
