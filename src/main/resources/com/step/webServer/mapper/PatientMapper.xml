@@ -29,7 +29,7 @@
                                                         (<include refid="bpTarget"/>) as C,
                                                         user,
                                                         patient
-        where bprecord.create_datetime > C.create_date
+        where DATE(bprecord.create_datetime) = CURDATE()
         and bprecord.patient_id = C.patient_id
         and (bprecord.dbp > C.dbp_target
                or

@@ -17,14 +17,50 @@
         where patient_id = #{patientId}
     </select>
     <select id="bpOverview" resultType="map">
-        select DATEDIFF(max(create_datetime), min(create_datetime)) as numMeasDate,
-               count(*) as numMeas,
-               max(sbp) as maxSbp,
-               avg(sbp) as meanSbp,
-               max(dbp) as maxDbp,
-               avg(dbp) as meanDbp
-        from step.bprecord
-        where patient_id = #{patientId}
+        select numMeasDate,
+               numMeas,
+               maxSbp,
+               meanSbp,
+               maxDbp,
+               meanDbp,
+               case
+                 when numMeas = 0 then null
+                  else
+                    (select count(*)
+                        from step.bprecord
+                        where patient_id = #{patientId}
+                        and (
+                        sbp <![CDATA[ > ]]> #{sbpTarget}
+                        or
+                        dbp <![CDATA[ > ]]> #{dbpTarget}
+                        )
+                    )
+               end as numInvalid,
+               case
+                 when numMeas = 0 then null
+                  else
+                      (
+                          (select count(*)
+                           from step.bprecord
+                           where patient_id = #{patientId}
+                             and (
+                                   sbp <![CDATA[ <= ]]> #{sbpTarget}
+                                   and
+                                   dbp <![CDATA[ <= ]]> #{dbpTarget}
+                               )
+                          ) / numMeas
+                          )
+               end as validRate
+        from (
+             select count(distinct CAST(create_datetime AS DATE)) as numMeasDate,
+                    count(*) as numMeas,
+                    max(sbp) as maxSbp,
+                    avg(sbp) as meanSbp,
+                    max(dbp) as maxDbp,
+                    avg(dbp) as meanDbp
+             from step.bprecord
+             where patient_id = #{patientId}
+             ) AS A
     </select>
     <insert id="insertOneBprecord">
         insert into step.bprecord

@@ -14,8 +14,8 @@ public class Followup  implements Domain{
     private String familyHistory;
     private String height;
     private String weight;
-    private String sbp;
-    private String dbp;
+    private Double sbp;
+    private Double dbp;
     private String meanbp;
     private String heartRate;
     private String bodyTemp;
@@ -23,8 +23,8 @@ public class Followup  implements Domain{
     private String bloodSugar;
     private String physExam;
     private String labExam;
-    private String sbpTarget;
-    private String dbpTarget;
+    private Double sbpTarget;
+    private Double dbpTarget;
     private String medicineRx;
     private Boolean isReferral;
     private Integer patientId;
@@ -112,19 +112,19 @@ public class Followup  implements Domain{
         this.weight = weight;
     }
 
-    public String getSbp() {
+    public Double getSbp() {
         return sbp;
     }
 
-    public void setSbp(String sbp) {
+    public void setSbp(Double sbp) {
         this.sbp = sbp;
     }
 
-    public String getDbp() {
+    public Double getDbp() {
         return dbp;
     }
 
-    public void setDbp(String dbp) {
+    public void setDbp(Double dbp) {
         this.dbp = dbp;
     }
 
@@ -184,19 +184,19 @@ public class Followup  implements Domain{
         this.labExam = labExam;
     }
 
-    public String getSbpTarget() {
+    public Double getSbpTarget() {
         return sbpTarget;
     }
 
-    public void setSbpTarget(String sbpTarget) {
+    public void setSbpTarget(Double sbpTarget) {
         this.sbpTarget = sbpTarget;
     }
 
-    public String getDbpTarget() {
+    public Double getDbpTarget() {
         return dbpTarget;
     }
 
-    public void setDbpTarget(String dbpTarget) {
+    public void setDbpTarget(Double dbpTarget) {
         this.dbpTarget = dbpTarget;
     }
 

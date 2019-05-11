@@ -104,8 +104,8 @@ public class FollowupController extends AbstractController {
     private void copyExamModelToFollowup(ExamModel examModel, Followup followup) {
         followup.setHeight(examModel.getHeight());
         followup.setWeight(examModel.getWeight());
-        followup.setSbp(examModel.getSbp());
-        followup.setDbp(examModel.getDbp());
+        followup.setSbp(Double.valueOf(examModel.getSbp()));
+        followup.setDbp(Double.valueOf(examModel.getDbp()));
         followup.setMeanbp(examModel.getMeanbp());
         followup.setHeartRate(examModel.getHeartRate());
         followup.setBodyTemp(examModel.getBodyTemp());
@@ -316,8 +316,8 @@ public class FollowupController extends AbstractController {
     }
 
     private void copyMgtPlanModelToFollowup(MgtPlanModel mgtPlanModel, Followup followup) {
-        followup.setSbpTarget(mgtPlanModel.getSbpTarget());
-        followup.setDbpTarget(mgtPlanModel.getDbpTarget());
+        followup.setSbpTarget(Double.valueOf(mgtPlanModel.getSbpTarget()));
+        followup.setDbpTarget(Double.valueOf(mgtPlanModel.getDbpTarget()));
         followup.setMedicineRx(mgtPlanModel.getMedicineRx());
         followup.setReferral(mgtPlanModel.isReferral());
         followup.setNextDatetime(LocalDateTime.parse(mgtPlanModel.getNextDatetime()));

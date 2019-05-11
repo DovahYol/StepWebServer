@@ -119,4 +119,12 @@ public class FollowupDao implements Dao {
     public List<Map<String, Object>> followupPlan(String nextDate) {
         return this.sqlSession.selectList("followupPlan", nextDate);
     }
+
+    public Followup getPatientsLatestFollowup(String patientId) {
+        return this.sqlSession.selectOne("getPatientsLatestFollowup", patientId);
+    }
+
+    public Map<String, Object> getValidAndInvalidPatients() {
+        return this.sqlSession.selectOne("getValidAndInvalidPatients");
+    }
 }

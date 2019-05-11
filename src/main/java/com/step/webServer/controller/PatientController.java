@@ -2,8 +2,10 @@ package com.step.webServer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.step.webServer.dao.BprecordDao;
+import com.step.webServer.dao.FollowupDao;
 import com.step.webServer.dao.PatientDao;
 import com.step.webServer.dao.UserDao;
+import com.step.webServer.domain.Followup;
 import com.step.webServer.domain.Patient;
 import com.step.webServer.model.PatientAddingModel;
 import com.step.webServer.util.MapFactory;
@@ -29,6 +31,7 @@ public class PatientController extends AbstractController{
     private final PatientDao patientDao;
     private final UserDao userDao;
     private final BprecordDao bprecordDao;
+    private final FollowupDao followupDao;
     private MapFactory<String, Object> mapFactory;
     private ResponseErrorFactory responseErrorFactory;
     @Autowired
@@ -44,10 +47,11 @@ public class PatientController extends AbstractController{
         this.responseErrorFactory = responseErrorFactory;
     }
 
-    public PatientController(PatientDao patientDao, UserDao userDao, BprecordDao bprecordDao) {
+    public PatientController(PatientDao patientDao, UserDao userDao, BprecordDao bprecordDao, FollowupDao followupDao) {
         this.patientDao = patientDao;
         this.userDao = userDao;
         this.bprecordDao = bprecordDao;
+        this.followupDao = followupDao;
     }
 
     @GetMapping
@@ -156,9 +160,18 @@ public class PatientController extends AbstractController{
     //未达标次数（numInvalid），达标率（validRate）未实现
     @GetMapping("/bpAnalysis")
     public Object getBpAnalysis(String patientId) {
-        Map<String, Object> map =bprecordDao.bpOverview(patientId);
-        map.put("numInvalid", 5);
-        map.put("validRate", "87%");
+        Followup fl = followupDao.getPatientsLatestFollowup(patientId);
+        double sbpTarget, dbpTarget;
+        if (fl == null || fl.getDbpTarget() == null || fl.getSbpTarget() == null) {
+            sbpTarget = 140;
+            dbpTarget = 90;
+        }else {
+            sbpTarget = fl.getSbpTarget();
+            dbpTarget = fl.getDbpTarget();
+        }
+
+        Map<String, Object> map =bprecordDao.bpOverview(patientId, sbpTarget, dbpTarget);
+
         map.put("bpRecords", bprecordDao.bpRecords(patientId));
         responseBuilder.setMap(map);
         return responseBuilder.getJson();

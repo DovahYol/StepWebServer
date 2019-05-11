@@ -1,5 +1,6 @@
 package com.step.webServer.controller;
 
+import com.step.webServer.dao.FollowupDao;
 import com.step.webServer.dao.PatientDao;
 import com.step.webServer.model.NameValueModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,15 @@ import java.util.Map;
 @RequestMapping(value = "/home", produces = "application/json;charset=UTF-8")
 public class HomeController extends AbstractController{
 
-    private PatientDao patientDao;
+    private final PatientDao patientDao;
+    private final FollowupDao followupDao;
+
     @Autowired
     HttpServletRequest request;
 
-    public HomeController(PatientDao patientDao) {
+    public HomeController(PatientDao patientDao, FollowupDao followupDao) {
         this.patientDao = patientDao;
+        this.followupDao = followupDao;
     }
 
     @GetMapping()
@@ -39,9 +43,10 @@ public class HomeController extends AbstractController{
         map.put("numNewPt", numNewPatients);
         map.put("numInvalidBP", numPatientsWithInvalidBp);
         map.put("numNewPtNotTested", numNewPatientsNotTested);
-        List<NameValueModel<String, Integer>> tableData = new ArrayList<>();
-        tableData.add(new NameValueModel<>("已达标", numPatients - numPatientsWithInvalidBp));
-        tableData.add(new NameValueModel<>("未达标", numPatientsWithInvalidBp));
+        List<NameValueModel<String, Long>> tableData = new ArrayList<>();
+        Map<String, Object> patientMetric = followupDao.getValidAndInvalidPatients();
+        tableData.add(new NameValueModel<>("已达标", (long)patientMetric.get("numValid")));
+        tableData.add(new NameValueModel<>("未达标", (long)patientMetric.get("numInValid")));
         map.put("tableData", tableData);
         responseBuilder.setMap(map);
         return responseBuilder.getJson();
