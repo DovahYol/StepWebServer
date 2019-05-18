@@ -16,6 +16,9 @@ public class PatientAddingModel {
     private String emergContName;
     private String emergContPhoneNo;
     private String emergContRelationship;
+    private String hdpDxDate;
+    private double maxSbp;
+    private double maxDbp;
 
     public String getPatientName() {
         return patientName;
@@ -135,5 +138,29 @@ public class PatientAddingModel {
 
     public void setEmergContRelationship(String emergContRelationship) {
         this.emergContRelationship = emergContRelationship;
+    }
+
+    public String getHdpDxDate() {
+        return hdpDxDate;
+    }
+
+    public void setHdpDxDate(String hdpDxDate) {
+        this.hdpDxDate = hdpDxDate;
+    }
+
+    public double getMaxSbp() {
+        return maxSbp;
+    }
+
+    public void setMaxSbp(double maxSbp) {
+        this.maxSbp = maxSbp;
+    }
+
+    public double getMaxDbp() {
+        return maxDbp;
+    }
+
+    public void setMaxDbp(double maxDbp) {
+        this.maxDbp = maxDbp;
     }
 }

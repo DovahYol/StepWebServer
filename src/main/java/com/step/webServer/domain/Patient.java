@@ -25,6 +25,9 @@ public class Patient implements Domain {
     private Integer dietGuide;
     private Integer saltLimitAndDrugGuidance;
     private Integer teamId;
+    private LocalDate hbpDxDate;
+    private Double maxSbp;
+    private Double maxDbp;
 
     public Integer getAge() {
         return age;
@@ -192,5 +195,29 @@ public class Patient implements Domain {
 
     public void setTeamId(Integer teamId) {
         this.teamId = teamId;
+    }
+
+    public LocalDate getHbpDxDate() {
+        return hbpDxDate;
+    }
+
+    public void setHbpDxDate(LocalDate hbpDxDate) {
+        this.hbpDxDate = hbpDxDate;
+    }
+
+    public Double getMaxSbp() {
+        return maxSbp;
+    }
+
+    public void setMaxSbp(Double maxSbp) {
+        this.maxSbp = maxSbp;
+    }
+
+    public Double getMaxDbp() {
+        return maxDbp;
+    }
+
+    public void setMaxDbp(Double maxDbp) {
+        this.maxDbp = maxDbp;
     }
 }

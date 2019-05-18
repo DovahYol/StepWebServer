@@ -36,21 +36,23 @@
                         )
                     )
                end as numInvalid,
-               case
-                 when numMeas = 0 then null
-                  else
-                      (
-                          (select count(*)
-                           from step.bprecord
-                           where patient_id = #{patientId}
-                             and (
-                                   sbp <![CDATA[ <= ]]> #{sbpTarget}
-                                   and
-                                   dbp <![CDATA[ <= ]]> #{dbpTarget}
-                               )
-                          ) / numMeas
-                          )
-               end as validRate
+               FORMAT(
+                   case
+                     when numMeas = 0 then null
+                      else
+                          (
+                              (select count(*)
+                               from step.bprecord
+                               where patient_id = #{patientId}
+                                 and (
+                                       sbp <![CDATA[ <= ]]> #{sbpTarget}
+                                       and
+                                       dbp <![CDATA[ <= ]]> #{dbpTarget}
+                                   )
+                              ) / numMeas
+                              )
+                   end,
+                 1) as validRate
         from (
              select count(distinct CAST(create_datetime AS DATE)) as numMeasDate,
                     count(*) as numMeas,

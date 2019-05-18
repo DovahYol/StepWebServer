@@ -137,6 +137,10 @@ public class PatientController extends AbstractController{
         patient.setEmergContPhoneNo(patientAddingModel.getEmergContPhoneNo());
         patient.setEmergContRelationship(patientAddingModel.getEmergContRelationship());
         patient.setTeamId(userDao.selectTeamIdByUsername((String) request.getSession().getAttribute("username")));
+        LocalDate localDate = LocalDate.parse(patientAddingModel.getHdpDxDate());
+        patient.setHbpDxDate(localDate);
+        patient.setMaxSbp(patientAddingModel.getMaxSbp());
+        patient.setMaxDbp(patientAddingModel.getMaxDbp());
         patientDao.insertPatient(patient);
         Map<String, Object> params = mapFactory.create();
         params.put("patientId", patient.getPatientId());

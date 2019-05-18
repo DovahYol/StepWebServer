@@ -48,7 +48,7 @@
                         and patient.patient_id = bprecord.patient_id)
     </select>
     <sql id="latestHomeBp">
-        select bprecord.patient_id, concat(sbp, '/', dbp) as latest_home_bp
+        select distinct bprecord.patient_id, concat(sbp, '/', dbp) as latest_home_bp
         from bprecord inner join (select max(create_datetime) as max_datetime, patient_id
                                   from bprecord
                                   group by patient_id) as latest_bprecord
@@ -56,18 +56,33 @@
           bprecord.patient_id = latest_bprecord.patient_id
     </sql>
     <select id="selectAllPatients" resultType="map">
-        select patient.patient_id patientId, patient_name patientName, patient.gender, patient.age, latest_home_bp latestHomeBP
-        from patient
-          inner join user using (team_id)
-          left join (<include refid="latestHomeBp"/>) as A using (patient_id)
-        where user.username = #{username}
-          <if test="keyword != null and keyword != ''">
-              and (
-              patient_name like concat('%', #{keyword}, '%')
-              or patient.phone_no like concat('%', #{keyword}, '%')
-              or patient.prc_id like concat('%',#{keyword}, '%')
-              )
-          </if>
+        select
+               C.patient_id AS patientId,
+               C.patient_name AS patientName,
+               C.gender,
+               C.age,
+               D.latest_home_bp AS latestHomeBP,
+              RIGHT(C.prc_id, 6) AS prcNoTailSix from
+        (
+            select
+                distinct
+                    A.patient_id,
+                    A.patient_name,
+                    A.gender,
+                    A.age,
+                    A.prc_id
+            from patient AS A
+            inner join user AS B using (team_id)
+            where B.username = #{username}
+            <if test="keyword != null and keyword != ''">
+                and (
+                A.patient_name like concat('%', #{keyword}, '%')
+                or A.phone_no like concat('%', #{keyword}, '%')
+                or A.prc_id like concat('%',#{keyword}, '%')
+                )
+            </if>
+        ) AS C left join (<include refid="latestHomeBp"/>) as D using(patient_id)
+
     </select>
     <select id="selectPatientId" resultType="int">
         select patient_id from patient
@@ -78,15 +93,21 @@
           (patient_name, create_datetime, gender, prc_id, birthday,
            marriage, ethnicity, degree_education, profession, address,
            phone_no, medical_insurance_type_id, emerg_cont_name,
-           emerg_cont_phone_no, emerg_cont_relationship, team_id, age)
+           emerg_cont_phone_no, emerg_cont_relationship, team_id, age, hbp_dx_date, max_sbp, max_dbp)
            values (#{patientName}, #{createDatetime}, #{gender}, #{prcId}, #{birthday},
                    #{marriage}, #{ethnicity}, #{degreeEducation}, #{profession}, #{address},
                    #{phoneNo}, #{medicalInsuranceTypeId}, #{emergContName},
-                   #{emergContPhoneNo}, #{emergContRelationship}, #{teamId}, #{age}
+                   #{emergContPhoneNo}, #{emergContRelationship}, #{teamId}, #{age}, #{hbpDxDate}, #{maxSbp}, #{maxDbp}
                    )
     </insert>
     <select id="patientMeta" resultType="map">
-        select patient_name, gender, age, '' as diagnose from step.patient
+        select
+               patient_name AS patientName,
+               gender,
+               age,
+               '' as diagnose,
+               RIGHT(prc_id, 6) as prcNoTailSix
+        from step.patient
         where patient_id = #{patientId}
     </select>
     <select id="patientOverview" resultType="map">
