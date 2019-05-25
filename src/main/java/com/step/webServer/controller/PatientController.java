@@ -22,8 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @RestController
 @RequestMapping(value = "/patient", produces = "application/json;charset=UTF-8")
@@ -99,25 +102,8 @@ public class PatientController extends AbstractController{
         patient.setPrcId(patientAddingModel.getPrcId());
         String birthDay = patientAddingModel.getBirthday();
         if (!StringUtils.isEmpty(birthDay)) {
-            if (birthDay.length() != 8) {
-                responseBuilder.setError(responseErrorFactory.create("未定", "birthDay的长度必须为8"));
-                return responseBuilder.getJson();
-            }
-            int year, month, dayOfMonth;
-            try{
-                year = Integer.valueOf(birthDay.substring(0, 4));
-                month = Integer.valueOf(birthDay.substring(4, 6));
-                dayOfMonth = Integer.valueOf(birthDay.substring(6, 8));
-            }catch (NumberFormatException ex) {
-                responseBuilder.setError(responseErrorFactory.create("未定", "birthDay必须只包含数字"));
-                return responseBuilder.getJson();
-            }
-            try{
-                patient.setBirthday(LocalDate.of(year, month, dayOfMonth));
-            }catch (DateTimeException ex) {
-                responseBuilder.setError(responseErrorFactory.create("未定", "birthDay不是一个合法的时间"));
-                return responseBuilder.getJson();
-            }
+            LocalDate localDate = LocalDate.parse(birthDay);
+            patient.setBirthday(localDate);
         }
         patient.setAge(patientAddingModel.getAge());
         patient.setMarriage(patientAddingModel.getMarriage());
@@ -157,8 +143,98 @@ public class PatientController extends AbstractController{
 
     @GetMapping("/overview")
     public Object getOverview(String patientId) {
-        responseBuilder.setMap(patientDao.getPatientOverview());
+        Patient patient = patientDao.getPatientById(patientId);
+
+        Map<String, Object> map = mapFactory.create();
+
+        if (patient != null) {
+            double maxSbp = patient.getMaxSbp();
+            double maxDbp = patient.getMaxDbp();
+            if (maxSbp >= 180 || maxDbp >= 110) {
+                map.put("bpLevel", "3级");
+            } else if (maxSbp >= 160 || maxDbp >= 100) {
+                map.put("bpLevel", "2级");
+            } else if (maxSbp >= 140 || maxDbp >= 90) {
+                map.put("bpLevel", "1级");
+            } else{
+                map.put("bpLevel", "正常");
+            }
+
+            Followup followup = followupDao.getPatientsLatestFollowup(patientId);
+            if (followup != null) {
+                if (followup.getDbp() <= followup.getDbpTarget()
+                        && followup.getSbp() <= followup.getSbpTarget()) {
+                    map.put("isValid", "达标");
+                } else {
+                    map.put("isValid", "未达标");
+                }
+
+                map.put("followUpDatetime", followup.getNextDatetime());
+
+                map.put("currentMgtPlan", followup.getMedicineRx());
+
+                map.put("riskLevel", getRiskLevel(followup, maxSbp, maxDbp));
+            }
+
+            LocalDate hbpDxDate = patient.getHbpDxDate();
+            if (hbpDxDate != null) {
+                long daysBetween = DAYS.between(hbpDxDate, LocalDate.now());
+                map.put("bpPeriod", daysBetween + "天");
+            }
+
+            LocalDateTime localDateTime = patient.getCreateDatetime();
+            if (localDateTime != null) {
+                long daysBetween = DAYS.between(localDateTime.toLocalDate(), LocalDate.now());
+                map.put("stepPeriod", daysBetween + "天");
+            }
+        }
+
+        responseBuilder.setMap(map);
+
         return responseBuilder.getJson();
+    }
+
+    public String getRiskLevel(Followup followup, double maxSbp, double maxDbp) {
+        String res = "正常";
+        List<Map<String, Long>> maps = patientDao.getRiskFactorClassCount(followup.getFollowupId());
+        Map<Long, Long> riskFactorClassMap = new HashMap<>();
+        for (Map<String, Long> item: maps) {
+            riskFactorClassMap.put(item.get("riskfactorclassId"), item.get("num"));
+        }
+
+        if (riskFactorClassMap.get(3L) > 0) {
+            res = "很高危";
+        } else if (riskFactorClassMap.get(2L) > 0){
+            if (maxSbp >= 180 || maxDbp >= 110) {
+                res = "很高危";
+            }else {
+                res = "高危";
+            }
+        } else if (riskFactorClassMap.get(1L) >= 3) {
+            if (maxSbp >= 140 || maxDbp >= 90) {
+                res = "高危";
+            } else if (maxSbp >= 130 || maxDbp >= 85) {
+                res = "中危";
+            }
+        } else if (riskFactorClassMap.get(1L) >= 1) {
+            if (maxSbp >= 160 || maxDbp >= 100) {
+                res = "高危";
+            } else if (maxSbp >= 140 || maxDbp >= 90) {
+                res = "中危";
+            } else if (maxSbp >= 130 || maxDbp >= 85) {
+                res = "低危";
+            }
+        } else {
+            if (maxSbp >= 180 || maxDbp >= 110) {
+                res = "高危";
+            } else if (maxSbp >= 160 || maxDbp >= 100) {
+                res = "中危";
+            } else if (maxSbp >= 130 || maxDbp >= 85) {
+                res = "低危";
+            }
+        }
+
+        return res;
     }
 
     //未达标次数（numInvalid），达标率（validRate）未实现
@@ -166,7 +242,7 @@ public class PatientController extends AbstractController{
     public Object getBpAnalysis(String patientId) {
         Followup fl = followupDao.getPatientsLatestFollowup(patientId);
         double sbpTarget, dbpTarget;
-        if (fl == null || fl.getDbpTarget() == null || fl.getSbpTarget() == null) {
+        if (fl == null || fl.getDbpTarget() == 0 || fl.getSbpTarget() == 0) {
             sbpTarget = 140;
             dbpTarget = 90;
         }else {

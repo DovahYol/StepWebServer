@@ -30,6 +30,18 @@
         group by team_id, team_name, A.create_datetime
     </select>
 
+    <select id="teamTotalNum" resultType="int">
+        select
+        count(*)
+        from step.team AS A
+        where 1
+        <if test="keyword != null and keyword != ''">
+            and (
+            team_name like concat('%', #{keyword}, '%')
+            )
+        </if>
+    </select>
+
     <select id="doctorsByTeamId" resultType="string">
         select username from step.user
         where team_id = #{teamId}

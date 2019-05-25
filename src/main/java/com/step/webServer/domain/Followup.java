@@ -14,8 +14,8 @@ public class Followup  implements Domain{
     private String familyHistory;
     private String height;
     private String weight;
-    private Double sbp;
-    private Double dbp;
+    private double sbp;
+    private double dbp;
     private String meanbp;
     private String heartRate;
     private String bodyTemp;
@@ -23,8 +23,8 @@ public class Followup  implements Domain{
     private String bloodSugar;
     private String physExam;
     private String labExam;
-    private Double sbpTarget;
-    private Double dbpTarget;
+    private double sbpTarget;
+    private double dbpTarget;
     private String medicineRx;
     private Boolean isReferral;
     private Integer patientId;
@@ -112,22 +112,6 @@ public class Followup  implements Domain{
         this.weight = weight;
     }
 
-    public Double getSbp() {
-        return sbp;
-    }
-
-    public void setSbp(Double sbp) {
-        this.sbp = sbp;
-    }
-
-    public Double getDbp() {
-        return dbp;
-    }
-
-    public void setDbp(Double dbp) {
-        this.dbp = dbp;
-    }
-
     public String getMeanbp() {
         return meanbp;
     }
@@ -184,22 +168,6 @@ public class Followup  implements Domain{
         this.labExam = labExam;
     }
 
-    public Double getSbpTarget() {
-        return sbpTarget;
-    }
-
-    public void setSbpTarget(Double sbpTarget) {
-        this.sbpTarget = sbpTarget;
-    }
-
-    public Double getDbpTarget() {
-        return dbpTarget;
-    }
-
-    public void setDbpTarget(Double dbpTarget) {
-        this.dbpTarget = dbpTarget;
-    }
-
     public String getMedicineRx() {
         return medicineRx;
     }
@@ -246,5 +214,37 @@ public class Followup  implements Domain{
 
     public void setNextConfirmed(Boolean nextConfirmed) {
         this.nextConfirmed = nextConfirmed;
+    }
+
+    public double getSbp() {
+        return sbp;
+    }
+
+    public void setSbp(double sbp) {
+        this.sbp = sbp;
+    }
+
+    public double getDbp() {
+        return dbp;
+    }
+
+    public void setDbp(double dbp) {
+        this.dbp = dbp;
+    }
+
+    public double getSbpTarget() {
+        return sbpTarget;
+    }
+
+    public void setSbpTarget(double sbpTarget) {
+        this.sbpTarget = sbpTarget;
+    }
+
+    public double getDbpTarget() {
+        return dbpTarget;
+    }
+
+    public void setDbpTarget(double dbpTarget) {
+        this.dbpTarget = dbpTarget;
     }
 }

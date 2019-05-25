@@ -48,6 +48,7 @@ public class TeamController extends AbstractController  {
         List<Map<String, Object>> teams = teamDao.teams(pageNum, pageSize, orderBy, keyword);
         Map<String, Object> responseMap = mapFactory.create();
         responseMap.put("teams", teams);
+        responseMap.put("count", teamDao.teamTotalNum(keyword));
         responseBuilder.setMap(responseMap);
         return responseBuilder.getJson();
     }
@@ -90,22 +91,12 @@ public class TeamController extends AbstractController  {
     @GetMapping("/overview")
     public Object overview(String teamId) {
         List<Map<String, Object>> teams = teamDao.membersByTeamId(Integer.valueOf(teamId));
-        List<Map<String, Object>> locals = new ArrayList<>();
         int count = 1;
         for (Map<String, Object> team: teams) {
-            Map<String, Object> local = mapFactory.create();
-            local.put("no", count);
-            local.put("userId", team.get("userId"));
-            local.put("username", team.get("username"));
-            local.put("age", team.get("age"));
-            local.put("position", team.get("position"));
-            local.put("department", team.get("department"));
-            local.put("phoneNo", team.get("phoneNo"));
-            locals.add(local);
-            count++;
+            team.put("no", count++);
         }
         Map<String, Object> map = mapFactory.create();
-        map.put("members", locals);
+        map.put("members", teams);
         responseBuilder.setMap(map);
         return responseBuilder.getJson();
     }

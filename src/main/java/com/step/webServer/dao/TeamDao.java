@@ -49,6 +49,13 @@ public class TeamDao implements Dao  {
         return teams;
     }
 
+    public int teamTotalNum(String keyword) {
+        Map<String, Object> params = mapFactory.create();
+        params.put("keyword", keyword);
+
+        return this.sqlSession.selectOne("teamTotalNum", params);
+    }
+
     public List<String> doctors(long teamId) {
         return sqlSession.selectList("doctorsByTeamId", teamId);
     }
