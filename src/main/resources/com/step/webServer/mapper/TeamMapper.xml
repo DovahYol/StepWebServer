@@ -10,8 +10,15 @@
         where team_id = #{teamId}
     </select>
     <select id="membersByTeamId" resultType="map">
-        select username, role_name, user_id, age, position, department, phone_no
-        from step.user left join step.role using(role_id)
+        select
+               username,
+               position,
+               user_id AS userId,
+               age,
+               position,
+               department,
+               phone_no AS phoneNo
+        from step.user
         where team_id = #{teamId}
     </select>
     <select id="teams" resultType="map">
