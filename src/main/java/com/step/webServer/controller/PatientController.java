@@ -8,10 +8,12 @@ import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.Followup;
 import com.step.webServer.domain.Patient;
 import com.step.webServer.model.PatientAddingModel;
+import com.step.webServer.model.PatientUpdateModel;
 import com.step.webServer.util.MapFactory;
 import com.step.webServer.util.ResponseErrorFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.beans.BeanMap;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -58,7 +59,7 @@ public class PatientController extends AbstractController{
     }
 
     @GetMapping
-    public Object getAllPatients(String keyword, int pageNum, int pageSize, String orderBy, boolean isAsc) throws JsonProcessingException {
+    public Object getAllPatients(String keyword, int pageNum, int pageSize, String orderBy, boolean isAsc, String queryType) throws JsonProcessingException {
         String username = (String)request.getSession().getAttribute("username");
         String direction = isAsc? " asc" : " desc";
         if("patientId".equals(orderBy)) {
@@ -77,6 +78,7 @@ public class PatientController extends AbstractController{
         Map<String, Object> map = mapFactory.create();
         map.put("username", username);
         map.put("keyword", keyword);
+        map.put("queryType", queryType);
         List<Map<String, Object>> patients = patientDao.selectAllPatients(pageNum, pageSize, orderBy, map);
         Map<String, Object> responseMap = mapFactory.create();
         responseMap.put("patients", patients);
@@ -255,5 +257,29 @@ public class PatientController extends AbstractController{
         map.put("bpRecords", bprecordDao.bpRecords(patientId));
         responseBuilder.setMap(map);
         return responseBuilder.getJson();
+    }
+
+    @GetMapping("/generalInfo")
+    public Object generalInfo(String patientId) {
+        Patient patient = patientDao.getPatientById(patientId);
+        responseBuilder.setMap(beanToMap(patient));
+        return responseBuilder.getJson();
+    }
+
+    @PostMapping("/updatePatient")
+    public Object updatePatient(PatientUpdateModel patient) {
+        patientDao.updatePatient(patient);
+        return responseBuilder.getJson();
+    }
+
+    private static <T> Map<String, Object> beanToMap(T bean) {
+        Map<String, Object> map = new HashMap<>();
+        if (bean != null) {
+            BeanMap beanMap = BeanMap.create(bean);
+            for (Object key : beanMap.keySet()) {
+                map.put(key+"", beanMap.get(key));
+            }
+        }
+        return map;
     }
 }

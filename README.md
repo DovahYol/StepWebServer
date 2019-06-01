@@ -66,3 +66,6 @@
     - GET /hospital/getHospitalInfo
     - GET /team/allPatientsByTeamId
     - POST /team/createAndAddMember
+    - POST /team/deleteTeammember
+    - GET /patient/generalInfo
+    - POST /patient/updatePatient

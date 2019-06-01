@@ -15,6 +15,7 @@
                symptom
         from step.bprecord
         where patient_id = #{patientId}
+        order by create_datetime desc
     </select>
     <select id="bpOverview" resultType="map">
         select numMeasDate,

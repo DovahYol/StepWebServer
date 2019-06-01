@@ -113,6 +113,10 @@
 			<artifactId>spring-security-core</artifactId>
 			<version>5.1.1.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

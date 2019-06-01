@@ -71,8 +71,8 @@ public class TeamDao implements Dao  {
         return sqlSession.update("addMember", map);
     }
 
-    public int deleteMember(int userId) {
-        return sqlSession.update("addMember", userId);
+    public int deleteMember(String userId) {
+        return sqlSession.update("deleteMember", userId);
     }
 
     public int insertTeam(Map<String, Object> params) {

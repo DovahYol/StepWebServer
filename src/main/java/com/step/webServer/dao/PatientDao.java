@@ -2,9 +2,8 @@ package com.step.webServer.dao;
 
 import com.github.pagehelper.PageHelper;
 import com.step.webServer.domain.Patient;
-import com.step.webServer.util.MapFactory;
+import com.step.webServer.model.PatientUpdateModel;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -83,5 +82,9 @@ public class PatientDao implements Dao{
 
     public List<Map<String, Long>> getRiskFactorClassCount(long followupId){
         return sqlSession.selectList("getRiskFactorClassCount", followupId);
+    }
+
+    public int updatePatient(PatientUpdateModel patient) {
+        return sqlSession.update("updatePatient", patient);
     }
 }

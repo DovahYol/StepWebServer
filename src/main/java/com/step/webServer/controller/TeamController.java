@@ -111,8 +111,7 @@ public class TeamController extends AbstractController  {
 
     @PostMapping("/deleteMember")
     public Object deleteMember(String userId) {
-        int intUserId = Integer.valueOf(userId);
-        teamDao.deleteMember(intUserId);
+        teamDao.deleteMember(userId);
         return responseBuilder.getJson();
     }
 
@@ -190,5 +189,10 @@ public class TeamController extends AbstractController  {
         params.remove("adminId");
 
         return params;
+    }
+
+    @PostMapping("/deleteTeammember")
+    public Object deleteTeammember(String teamId, String userId) {
+        return deleteMember(userId);
     }
 }

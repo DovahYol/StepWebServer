@@ -80,6 +80,28 @@
                 or A.prc_id like concat('%',#{keyword}, '%')
                 )
             </if>
+            <if test="queryType == 'newPatients'">
+                and create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+            </if>
+            <if test="queryType == 'newPatientsNotTested'">
+                and create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                and not exists(
+                  select bprecord_id from bprecord AS B
+                  where B.create_datetime > DATE_SUB(NOW(), INTERVAL 3 DAY )
+                    and A.patient_id = B.patient_id
+                  )
+            </if>
+            <if test="queryType == 'abnormal'">
+                and A.patient_id in (
+                    select distinct bprecord.patient_id from bprecord,
+                    (<include refid="bpTarget"/>) as C
+                    where DATE(bprecord.create_datetime) = CURDATE()
+                    and bprecord.patient_id = C.patient_id
+                    and (bprecord.dbp > C.dbp_target
+                    or
+                    bprecord.sbp > C.sbp_target)
+                )
+            </if>
         ) AS C left join (<include refid="latestHomeBp"/>) as D using(patient_id)
 
     </select>
@@ -147,4 +169,26 @@
           on C.riskfactorclass_id = D.riskfactorclass_id
 
     </select>
+    <update id="updatePatient">
+        update patient
+        set patient_name = #{patientName},
+            gender = #{gender},
+            prc_id = #{prcId},
+            birthday = #{birthday},
+            age = #{age},
+            marriage = #{marriage},
+            ethnicity = #{ethnicity},
+            degree_education = #{degreeEducation},
+            profession = #{profession},
+            address = #{address},
+            phone_no = #{phoneNo},
+            medical_insurance_type_id = #{medicalInsuranceTypeId},
+            emerg_cont_name = #{emergContName},
+            emerg_cont_phone_no = #{emergContPhoneNo},
+            emerg_cont_relationship = #{emergContRelationship},
+            hbp_dx_date = #{hbpDxDate},
+            max_sbp = #{maxSbp},
+            max_dbp = #{maxDbp}
+        where patient_id = #{patientId}
+    </update>
 </mapper>
