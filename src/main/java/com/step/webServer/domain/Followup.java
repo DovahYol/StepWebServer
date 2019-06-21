@@ -23,6 +23,7 @@ public class Followup  implements Domain{
     private String bloodSugar;
     private String physExam;
     private String labExam;
+    private String dzDx;
     private double sbpTarget;
     private double dbpTarget;
     private String medicineRx;
@@ -230,6 +231,14 @@ public class Followup  implements Domain{
 
     public void setDbp(double dbp) {
         this.dbp = dbp;
+    }
+
+    public String getDzDx() {
+        return dzDx;
+    }
+
+    public void setDzDx(String dzDx) {
+        this.dzDx = dzDx;
     }
 
     public double getSbpTarget() {

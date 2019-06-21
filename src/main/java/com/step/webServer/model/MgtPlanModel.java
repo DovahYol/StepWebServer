@@ -3,6 +3,7 @@ package com.step.webServer.model;
 public class MgtPlanModel {
     private String patientId;
     private String createDate;
+    private String dzDx;
     private String sbpTarget;
     private String dbpTarget;
     private String medicineRx;
@@ -63,5 +64,13 @@ public class MgtPlanModel {
 
     public void setNextDatetime(String nextDatetime) {
         this.nextDatetime = nextDatetime;
+    }
+
+    public String getDzDx() {
+        return dzDx;
+    }
+
+    public void setDzDx(String dzDx) {
+        this.dzDx = dzDx;
     }
 }

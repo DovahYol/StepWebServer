@@ -4,6 +4,7 @@ import com.step.webServer.dao.PatientDao;
 import com.step.webServer.dao.TeamDao;
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.Team;
+import com.step.webServer.model.TeamAddMemberModel;
 import com.step.webServer.model.TeamCreateModel;
 import com.step.webServer.util.MapFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,10 +103,10 @@ public class TeamController extends AbstractController  {
     }
 
     @PostMapping("/addMember")
-    public Object addMember(String teamId, String userId) {
-        int intTeamId = Integer.valueOf(teamId);
-        int intUserId = Integer.valueOf(userId);
-        teamDao.addMember(intTeamId, intUserId);
+    public Object addMember(@RequestBody TeamAddMemberModel model) {
+        for (String userId: model.getUserIds()) {
+            teamDao.addMember(model.getTeamId(), userId);
+        }
         return responseBuilder.getJson();
     }
 
@@ -165,12 +166,11 @@ public class TeamController extends AbstractController  {
     public Object createAndAddMember(@RequestBody TeamCreateModel model) {
         Map<String, Object> params = createTeam(model.getTeamName());
 
-        long teamIdInt = (long)params.get("teamId");
+        String teamIdStr = params.get("teamId") + "";
 
         for (String memberId:
              model.getUserIds()) {
-            long memberIdInt = Integer.valueOf(memberId);
-            teamDao.addMember(teamIdInt, memberIdInt);
+            teamDao.addMember(teamIdStr, memberId);
         }
 
         responseBuilder.setMap(params);

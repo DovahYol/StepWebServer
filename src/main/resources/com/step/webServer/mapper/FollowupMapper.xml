@@ -30,6 +30,7 @@
             blood_sugar = #{bloodSugar},
             phys_exam = #{physExam},
             lab_exam = #{labExam},
+            dz_dx = #{dzDx},
             sbp_target = #{sbpTarget},
             dbp_target = #{dbpTarget},
             medicine_rx = #{medicineRx},
@@ -60,6 +61,7 @@
            blood_sugar,
            phys_exam,
            lab_exam,
+           dz_dx,
            sbp_target,
            dbp_target,
            medicine_rx,
@@ -88,6 +90,7 @@
              #{bloodSugar},
              #{physExam},
              #{labExam},
+             #{dzDx},
              #{sbpTarget},
              #{dbpTarget},
              #{medicineRx},
@@ -174,11 +177,12 @@
     </update>
     <select id="mgtPlan" resultType="map">
         select
-               sbp_target,
-               dbp_target,
-               medicine_rx,
-               is_referral,
-               next_datetime
+               dz_dx AS dzDx,
+               sbp_target AS sbpTarget,
+               dbp_target AS dbpTarget,
+               medicine_rx AS medicineRx,
+               is_referral AS isReferral,
+               next_datetime AS nextDatetime
         from step.followup
         where followup_id = #{followupId}
     </select>

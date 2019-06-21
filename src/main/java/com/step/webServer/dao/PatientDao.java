@@ -1,11 +1,14 @@
 package com.step.webServer.dao;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.step.webServer.domain.Patient;
 import com.step.webServer.model.PatientUpdateModel;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -33,19 +36,23 @@ public class PatientDao implements Dao{
         return (int)sqlSession.selectList("numNewPatientsNotTestedByUsername", username).get(0);
     }
 
-    public List<Map<String, Object>> selectAllPatients(int pageNum, int pageSize, String orderBy, Map<String, Object> parameter){
+    public List<Object> selectAllPatients(int pageNum, int pageSize, String orderBy, Map<String, Object> parameter){
+        Page page;
         if (orderBy != null) {
-            PageHelper.startPage(pageNum, pageSize, orderBy);
+            page = PageHelper.startPage(pageNum, pageSize, orderBy);
         }
         else {
-            PageHelper.startPage(pageNum, pageSize);
+            page = PageHelper.startPage(pageNum, pageSize);
         }
 
         List<Map<String, Object>> patients = sqlSession.selectList("selectAllPatients", parameter);
         for (int i = 0; i < patients.size(); i++) {
             patients.get(i).put("no", i + 1);
         }
-        return patients;
+
+        PageInfo info = new PageInfo<>(page.getResult());
+
+        return Arrays.asList(patients, info.getTotal());
     }
 
     public boolean hasPatient(String patientName) {

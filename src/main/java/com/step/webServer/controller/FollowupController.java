@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -215,7 +214,7 @@ public class FollowupController extends AbstractController {
 
     @GetMapping("/mgtPlan")
     public Object mgtPlan(String followupId) {
-        responseBuilder.setMap(followupDao.mgtPlan(Integer.valueOf(followupId)));
+        responseBuilder.setMap(followupDao.mgtPlan(followupId));
         return responseBuilder.getJson();
     }
 
@@ -316,6 +315,7 @@ public class FollowupController extends AbstractController {
     }
 
     private void copyMgtPlanModelToFollowup(MgtPlanModel mgtPlanModel, Followup followup) {
+        followup.setDzDx(mgtPlanModel.getDzDx());
         followup.setSbpTarget(Double.valueOf(mgtPlanModel.getSbpTarget()));
         followup.setDbpTarget(Double.valueOf(mgtPlanModel.getDbpTarget()));
         followup.setMedicineRx(mgtPlanModel.getMedicineRx());

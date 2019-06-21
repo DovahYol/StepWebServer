@@ -79,9 +79,10 @@ public class PatientController extends AbstractController{
         map.put("username", username);
         map.put("keyword", keyword);
         map.put("queryType", queryType);
-        List<Map<String, Object>> patients = patientDao.selectAllPatients(pageNum, pageSize, orderBy, map);
+        List<Object> ret = patientDao.selectAllPatients(pageNum, pageSize, orderBy, map);
         Map<String, Object> responseMap = mapFactory.create();
-        responseMap.put("patients", patients);
+        responseMap.put("patients", ret.get(0));
+        responseMap.put("count", ret.get(1));
         responseBuilder.setMap(responseMap);
         return responseBuilder.getJson();
     }

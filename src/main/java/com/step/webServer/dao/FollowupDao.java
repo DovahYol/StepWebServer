@@ -92,7 +92,7 @@ public class FollowupDao implements Dao {
         return this.sqlSession.insert("updateRiskfactorFollowup", params);
     }
 
-    public Map<String, Object> mgtPlan (int followupId) {
+    public Map<String, Object> mgtPlan (String followupId) {
         return this.sqlSession.selectOne("mgtPlan", followupId);
     }
 
