@@ -7,7 +7,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -45,7 +44,7 @@ public WebMvcConfigurer corsConfigurer() {
 		@Override
 		public void addCorsMappings(CorsRegistry registry) {
 			registry.addMapping("/**")
-					.allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE")
+					.allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
 					.allowedOrigins("http://localhost:8080")
 					.allowCredentials(true);
 		}
