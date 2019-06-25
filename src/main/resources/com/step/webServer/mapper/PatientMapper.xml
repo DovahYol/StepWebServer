@@ -48,12 +48,16 @@
                         and patient.patient_id = bprecord.patient_id)
     </select>
     <sql id="latestHomeBp">
-        select A.patient_id, concat(sbp, '/', dbp) as latest_home_bp
-        from bprecord AS A inner join (select max(create_datetime) as max_datetime, patient_id
-                                  from bprecord
-                                  group by patient_id) as B
-        on A.create_datetime = B.max_datetime and
-          A.patient_id = B.patient_id
+        select C.patient_id,  concat(max(C.sbp), '/', max(C.dbp)) as latest_home_bp
+        from (
+          select A.patient_id, A.sbp, A.dbp
+          from bprecord AS A inner join (select max(create_datetime) as max_datetime, patient_id
+                                         from bprecord
+                                         group by patient_id) as B
+                                        on A.create_datetime = B.max_datetime and
+                                           A.patient_id = B.patient_id
+          )AS C
+        group by C.patient_id
     </sql>
     <select id="selectAllPatients" resultType="map">
         select
