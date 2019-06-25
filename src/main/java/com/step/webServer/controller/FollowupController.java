@@ -41,7 +41,7 @@ public class FollowupController extends AbstractController {
         return responseBuilder.getJson();
     }
 
-    @PutMapping("/medicalRecord")
+    @PostMapping("/medicalRecord")
     @Transactional
     public Object putMedicalRecord(MedicalRecordModel medicalRecordModel) throws Exception {
         int userId = (int)request.getSession().getAttribute("userId");
