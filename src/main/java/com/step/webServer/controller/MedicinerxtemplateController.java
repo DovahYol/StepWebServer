@@ -28,7 +28,7 @@ public class MedicinerxtemplateController extends AbstractController {
         return responseBuilder.getJson();
     }
 
-    @PutMapping
+    @PostMapping
     public Object putMedicinerxtemplate(Medicinerxtemplate medicinerxtemplate) {
         Integer temp = medicinerxtemplate.getMedicinerxtemplateId();
         if (temp == null) {

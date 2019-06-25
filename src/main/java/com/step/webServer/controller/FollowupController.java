@@ -79,7 +79,7 @@ public class FollowupController extends AbstractController {
         return responseBuilder.getJson();
     }
 
-    @PutMapping("/exam")
+    @PostMapping("/exam")
     @Transactional
     public Object putExam(ExamModel examModel) throws Exception {
         int userId = (int)request.getSession().getAttribute("userId");
@@ -153,7 +153,7 @@ public class FollowupController extends AbstractController {
         return responseBuilder.getJson();
     }
 
-    @PutMapping("/riskfactor")
+    @PostMapping("/riskfactor")
     @Transactional
     public Object putRiskfactor(@RequestBody PutRiskfactorModel putRiskfactorModel) {
         String patientId = putRiskfactorModel.getPatientId();
@@ -234,7 +234,7 @@ public class FollowupController extends AbstractController {
         return responseBuilder.getJson();
     }
 
-    @PutMapping("/mgtPlan")
+    @PostMapping("/mgtPlan")
     public Object putMgtPlan(MgtPlanModel mgtPlanModel) throws Exception {
         int userId = (int)request.getSession().getAttribute("userId");
         Followup followup = followupDao.followup(
@@ -260,7 +260,7 @@ public class FollowupController extends AbstractController {
         return responseBuilder.getJson();
     }
 
-    @PutMapping("/practicerx")
+    @PostMapping("/practicerx")
     public Object putPracticerx(@RequestBody PutPracticerxModel putPracticerxModel) {
         int userId = (int)request.getSession().getAttribute("userId");
         int parsedPatientId;

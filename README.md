@@ -20,24 +20,24 @@
     - GET /patient/bpAnalysis
     - POST /bprecord
     - GET /followUp/medicalRecord
-    - PUT /followUp/medicalRecord
+    - POST /followUp/medicalRecord
     - GET /template/
     - DELETE /template/delete
     - POST /template/add
     - GET /followUp/allDateAndFollowupIds
     - GET /followUp/exam
-    - PUT /followUp/exam
+    - POST /followUp/exam
     - GET /followUp/riskfactorclass
     - GET /followUp/riskfactor
-    - PUT /followUp/riskfactor
+    - POST /followUp/riskfactor
     - GET /followUp/cvRisk
         - 返回mock data
     - GET /followUp/mgtPlan
     - GET /followUp/practicerx
-    - PUT /followUp/mgtPlan
-    - PUT /followUp/practicerx
+    - POST /followUp/mgtPlan
+    - POST /followUp/practicerx
     - GET /medicinerxtemplate
-    - PUT /medicinerxtemplate
+    - POST /medicinerxtemplate
     - DELETE /medicinerxtemplate
     - GET /courserecord
     - GET /questionnaire
@@ -51,7 +51,7 @@
     - POST /user/uploadMyPicture
     - GET /admin/overview
     - GET /hospital/mine
-    - PUT /hospital/mine
+    - POST /hospital/mine
     - GET /team/
     - GET /team/detail
     - GET /team/overview
@@ -62,7 +62,7 @@
     - GET /team/usersAvailable
     - GET /user/unconfirmed
     - POST /user/unconfirmed
-    - PUT /user/createAdminAndHospital        
+    - POST /user/createAdminAndHospital        
     - GET /hospital/getHospitalInfo
     - GET /team/allPatientsByTeamId
     - POST /team/createAndAddMember

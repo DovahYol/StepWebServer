@@ -10,10 +10,12 @@ import com.step.webServer.service.FileService;
 import com.step.webServer.util.MapFactory;
 import com.step.webServer.util.ResponseError;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -129,7 +131,7 @@ public class UserController extends AbstractController{
         return responseBuilder.getJson();
     }
 
-    @PutMapping("/putAdminAndHospital")
+    @PostMapping("/putAdminAndHospital")
     @Transactional
     public Object putAdminAndHospital(
             String hospitalName,
