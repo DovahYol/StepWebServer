@@ -44,7 +44,7 @@ public class HomeController extends AbstractController{
         map.put("numInvalidBP", numPatientsWithInvalidBp);
         map.put("numNewPtNotTested", numNewPatientsNotTested);
         List<NameValueModel<String, Long>> tableData = new ArrayList<>();
-        Map<String, Object> patientMetric = followupDao.getValidAndInvalidPatients();
+        Map<String, Object> patientMetric = followupDao.getValidAndInvalidPatients(username);
         tableData.add(new NameValueModel<>("已达标", (long)patientMetric.get("numValid")));
         tableData.add(new NameValueModel<>("未达标", (long)patientMetric.get("numInValid")));
         map.put("tableData", tableData);

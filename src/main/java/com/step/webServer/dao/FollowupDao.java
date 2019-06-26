@@ -124,7 +124,7 @@ public class FollowupDao implements Dao {
         return this.sqlSession.selectOne("getPatientsLatestFollowup", patientId);
     }
 
-    public Map<String, Object> getValidAndInvalidPatients() {
-        return this.sqlSession.selectOne("getValidAndInvalidPatients");
+    public Map<String, Object> getValidAndInvalidPatients(String username) {
+        return this.sqlSession.selectOne("getValidAndInvalidPatients", username);
     }
 }
