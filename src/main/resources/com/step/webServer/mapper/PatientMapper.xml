@@ -129,7 +129,6 @@
                patient_name AS patientName,
                gender,
                age,
-               '' as diagnose,
                RIGHT(prc_id, 6) as prcNoTailSix
         from step.patient
         where patient_id = #{patientId}

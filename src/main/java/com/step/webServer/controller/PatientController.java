@@ -140,12 +140,23 @@ public class PatientController extends AbstractController{
 
     @GetMapping("/meta")
     public Object getMeta(String patientId) {
-        responseBuilder.setMap(patientDao.getPatientMeta(patientId));
+        Map<String, Object> map = patientDao.getPatientMeta(patientId);
+        Map<String, Object> basic = getBasic(patientId);
+        map.put("diagnose", "高血压" + basic.get("bpLevel") + " " +basic.get("riskLevel"));
+        responseBuilder.setMap(map);
         return responseBuilder.getJson();
     }
 
     @GetMapping("/overview")
     public Object getOverview(String patientId) {
+        Map<String, Object> map = getBasic(patientId);
+
+        responseBuilder.setMap(map);
+
+        return responseBuilder.getJson();
+    }
+
+    private Map<String, Object> getBasic(String patientId) {
         Patient patient = patientDao.getPatientById(patientId);
 
         Map<String, Object> map = mapFactory.create();
@@ -192,9 +203,7 @@ public class PatientController extends AbstractController{
             }
         }
 
-        responseBuilder.setMap(map);
-
-        return responseBuilder.getJson();
+        return map;
     }
 
     public String getRiskLevel(Followup followup, double maxSbp, double maxDbp) {
