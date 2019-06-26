@@ -53,7 +53,7 @@
                               ) / numMeas
                               )
                    end,
-                 1) as validRate
+                 3) as validRate
         from (
              select count(distinct CAST(create_datetime AS DATE)) as numMeasDate,
                     count(*) as numMeas,
