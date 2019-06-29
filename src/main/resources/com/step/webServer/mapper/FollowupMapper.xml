@@ -244,23 +244,46 @@
         limit 1
     </select>
     <select id="getValidAndInvalidPatients" resultType="map">
-        select
-               count(case when C.dbp <![CDATA[ < ]]> C.dbp_target and C.sbp <![CDATA[ < ]]> C.sbp_target then 1 else null end) AS numValid,
-               count(case when C.dbp <![CDATA[ >= ]]> C.dbp_target or C.sbp <![CDATA[ >= ]]> C.sbp_target then 1 else null end) AS numInValid
-        from
+        <if test="roleId == 1 || roleId == 2">
+            select
+            count(case when C.dbp <![CDATA[ < ]]> C.dbp_target and C.sbp <![CDATA[ < ]]> C.sbp_target then 1 else null end) AS numValid,
+            count(case when C.dbp <![CDATA[ >= ]]> C.dbp_target or C.sbp <![CDATA[ >= ]]> C.sbp_target then 1 else null end) AS numInValid
+            from
             (
                 select dbp, sbp, dbp_target, sbp_target
                 from followup AS A inner join (
-                    select patient_id, max(create_date) AS latestCreateDate from step.followup
-                    where create_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)
-                    group by patient_id
+                select patient_id, max(create_date) AS latestCreateDate from step.followup
+                where create_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                group by patient_id
                 ) AS B
                 on A.patient_id = B.patient_id and A.create_date = B.latestCreateDate
                 inner join step.patient AS C on B.patient_id = C.patient_id
                 inner join user AS D using (team_id)
                 where A.sbp_target is not null
-                  and A.dbp_target is not null
-                  and username = #{username}
+                and A.dbp_target is not null
+                and D.user_id = #{userId}
             ) AS C
+        </if>
+        <if test="roleId == 3">
+            select
+            count(case when C.dbp <![CDATA[ < ]]> C.dbp_target and C.sbp <![CDATA[ < ]]> C.sbp_target then 1 else null end) AS numValid,
+            count(case when C.dbp <![CDATA[ >= ]]> C.dbp_target or C.sbp <![CDATA[ >= ]]> C.sbp_target then 1 else null end) AS numInValid
+            from
+            (
+                select dbp, sbp, dbp_target, sbp_target
+                from followup AS A inner join (
+                select patient_id, max(create_date) AS latestCreateDate from step.followup
+                where create_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                group by patient_id
+                ) AS B
+                on A.patient_id = B.patient_id and A.create_date = B.latestCreateDate
+                inner join step.patient AS C on B.patient_id = C.patient_id
+                inner join user AS D using (team_id)
+                inner join hospital AS E on D.hospital_id = E.hospital_id
+                where A.sbp_target is not null
+                and A.dbp_target is not null
+                and E.admin_id = #{userId}
+            ) AS C
+        </if>
     </select>
 </mapper>

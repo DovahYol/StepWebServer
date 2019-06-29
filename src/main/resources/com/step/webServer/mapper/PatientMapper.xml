@@ -5,17 +5,36 @@
 <mapper namespace="com.step.webServer.mapper.PatientMapper">
     <cache-ref namespace="com.step.webServer.mapper" />
     <select id="numPatientsByUsername" resultType="java.lang.Integer">
-      select count(distinct patient.patient_id)
-      from user, patient
-      where user.team_id = patient.team_id
-        and user.username = #{username}
+        <if test="roleId == 1 || roleId == 2">
+            select count(*)
+            from user AS A, patient AS B
+            where A.team_id = B.team_id
+            and A.user_id = #{userId}
+        </if>
+        <if test="roleId == 3">
+            select count(*)
+            from user AS A, patient AS B, step.hospital AS C
+            where C.admin_id = #{userId}
+            and C.hospital_id = A.hospital_id
+            and A.team_id = B.team_id
+        </if>
     </select>
     <select id="numNewPatientsByUsername" resultType="java.lang.Integer">
-      select count(distinct patient.patient_id)
-      from user, patient
-      where user.team_id = patient.team_id
-        and user.username = #{username}
-      and patient.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+        <if test="roleId == 1 || roleId == 2">
+            select count(*)
+            from user AS A, patient AS B
+            where A.team_id = B.team_id
+            and A.user_id = #{userId}
+            and B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+        </if>
+        <if test="roleId == 3">
+            select count(*)
+            from user AS A, patient AS B, step.hospital AS C
+            where C.admin_id = #{userId}
+            and C.hospital_id = A.hospital_id
+            and A.team_id = B.team_id
+            and B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+        </if>
     </select>
     <sql id="bpTarget">
         select B.create_date, B.patient_id, sbp_target, dbp_target
@@ -25,27 +44,59 @@
         where A.patient_id = B.patient_id and A.create_date = B.create_date
     </sql>
     <select id="numPatientsWithInvalidBpByUsername" resultType="java.lang.Integer">
-        select count(distinct bprecord.patient_id) from bprecord,
-                                                        (<include refid="bpTarget"/>) as C,
-                                                        user,
-                                                        patient
-        where DATE(bprecord.create_datetime) = CURDATE()
-        and bprecord.patient_id = C.patient_id
-        and (bprecord.dbp > C.dbp_target
-               or
-             bprecord.sbp > C.sbp_target)
-        and bprecord.patient_id = patient.patient_id
-        and patient.team_id = user.team_id
-        and user.username = #{username}
+        <if test="roleId == 1 || roleId == 2">
+            select count(distinct bprecord.patient_id) from bprecord,
+            (<include refid="bpTarget"/>) as C,
+            user AS D,
+            patient AS E
+            where DATE(bprecord.create_datetime) = CURDATE()
+            and bprecord.patient_id = C.patient_id
+            and (bprecord.dbp > C.dbp_target
+            or
+            bprecord.sbp > C.sbp_target)
+            and bprecord.patient_id = E.patient_id
+            and E.team_id = D.team_id
+            and D.user_id = #{userId}
+        </if>
+        <if test="roleId == 3">
+            select count(distinct bprecord.patient_id) from bprecord,
+            (<include refid="bpTarget"/>) as C,
+            user AS D,
+            patient AS E,
+            hospital AS F
+            where DATE(bprecord.create_datetime) = CURDATE()
+            and bprecord.patient_id = C.patient_id
+            and (bprecord.dbp > C.dbp_target
+            or
+            bprecord.sbp > C.sbp_target)
+            and bprecord.patient_id = E.patient_id
+            and F.admin_id = #{userId}
+            and F.hospital_id = D.hospital_id
+            and D.team_id = E.team_id
+        </if>
     </select>
     <select id="numNewPatientsNotTestedByUsername" resultType="java.lang.Integer">
-        select count(distinct patient.patient_id)
-        from user left join patient on user.team_id = patient.team_id
-        where user.username = #{username}
-        and patient.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
-        and not exists(select bprecord_id from bprecord
-                        where bprecord.create_datetime > DATE_SUB(NOW(), INTERVAL 3 DAY )
-                        and patient.patient_id = bprecord.patient_id)
+        <if test="roleId == 1 || roleId == 2">
+            select count(distinct B.patient_id)
+            from user AS A,  patient AS B
+            where A.team_id = B.team_id
+            and A.user_id = #{userId}
+            and B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+            and not exists(select bprecord_id from bprecord
+            where bprecord.create_datetime > DATE_SUB(NOW(), INTERVAL 3 DAY )
+            and B.patient_id = bprecord.patient_id)
+        </if>
+        <if test="roleId == 3">
+            select count(distinct B.patient_id)
+            from user AS A,  patient AS B, hospital AS C
+            where C.admin_id = #{userId}
+            and C.hospital_id = A.hospital_id
+            and A.team_id = B.team_id
+            and B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+            and not exists(select bprecord_id from bprecord
+            where bprecord.create_datetime > DATE_SUB(NOW(), INTERVAL 3 DAY )
+            and B.patient_id = bprecord.patient_id)
+        </if>
     </select>
     <sql id="latestHomeBp">
         select C.patient_id,  concat(max(C.sbp), '/', max(C.dbp)) as latest_home_bp

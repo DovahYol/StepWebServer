@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.step.webServer.domain.Patient;
 import com.step.webServer.model.PatientUpdateModel;
+import com.step.webServer.util.MapFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
@@ -15,25 +16,43 @@ import java.util.Map;
 @Component
 public class PatientDao implements Dao{
     private final SqlSession sqlSession;
+    private final MapFactory<String, Object> mapFactory;
 
-    public PatientDao(SqlSession sqlSession) {
+    public PatientDao(SqlSession sqlSession, MapFactory<String, Object> mapFactory) {
         this.sqlSession = sqlSession;
+        this.mapFactory = mapFactory;
     }
 
-    public int numPatientsByUsername(String username){
-        return (int)sqlSession.selectList("numPatientsByUsername", username).get(0);
+    public int numPatientsByUsername(int userId, int roleId){
+        Map<String, Object> map = mapFactory.create();
+        map.put("userId", userId);
+        map.put("roleId", roleId);
+
+        return (int)sqlSession.selectList("numPatientsByUsername", map).get(0);
     }
 
-    public int numNewPatientsByUsername(String username){
-        return (int)sqlSession.selectList("numNewPatientsByUsername", username).get(0);
+    public int numNewPatientsByUsername(int userId, int roleId){
+        Map<String, Object> map = mapFactory.create();
+        map.put("userId", userId);
+        map.put("roleId", roleId);
+
+        return (int)sqlSession.selectList("numNewPatientsByUsername", map).get(0);
     }
 
-    public int numPatientsWithInvalidBpByUsername(String username){
-        return (int)sqlSession.selectList("numPatientsWithInvalidBpByUsername", username).get(0);
+    public int numPatientsWithInvalidBpByUsername(int userId, int roleId){
+        Map<String, Object> map = mapFactory.create();
+        map.put("userId", userId);
+        map.put("roleId", roleId);
+
+        return (int)sqlSession.selectList("numPatientsWithInvalidBpByUsername", map).get(0);
     }
 
-    public int numNewPatientsNotTestedByUsername(String username){
-        return (int)sqlSession.selectList("numNewPatientsNotTestedByUsername", username).get(0);
+    public int numNewPatientsNotTestedByUsername(int userId, int roleId){
+        Map<String, Object> map = mapFactory.create();
+        map.put("userId", userId);
+        map.put("roleId", roleId);
+
+        return (int)sqlSession.selectList("numNewPatientsNotTestedByUsername", map).get(0);
     }
 
     public List<Object> selectAllPatients(int pageNum, int pageSize, String orderBy, Map<String, Object> parameter){
