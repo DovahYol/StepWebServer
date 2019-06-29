@@ -18,6 +18,10 @@
             and C.hospital_id = A.hospital_id
             and A.team_id = B.team_id
         </if>
+        <if test="roleId == 5">
+            select count(*)
+            from patient
+        </if>
     </select>
     <select id="numNewPatientsByUsername" resultType="java.lang.Integer">
         <if test="roleId == 1 || roleId == 2">
@@ -34,6 +38,11 @@
             and C.hospital_id = A.hospital_id
             and A.team_id = B.team_id
             and B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+        </if>
+        <if test="roleId == 5">
+            select count(*)
+            from patient AS B
+            where B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
         </if>
     </select>
     <sql id="bpTarget">
@@ -74,6 +83,15 @@
             and F.hospital_id = D.hospital_id
             and D.team_id = E.team_id
         </if>
+        <if test="roleId == 5">
+            select count(distinct bprecord.patient_id) from bprecord,
+            (<include refid="bpTarget"/>) as C
+            where DATE(bprecord.create_datetime) = CURDATE()
+            and bprecord.patient_id = C.patient_id
+            and (bprecord.dbp > C.dbp_target
+            or
+            bprecord.sbp > C.sbp_target)
+        </if>
     </select>
     <select id="numNewPatientsNotTestedByUsername" resultType="java.lang.Integer">
         <if test="roleId == 1 || roleId == 2">
@@ -93,6 +111,14 @@
             and C.hospital_id = A.hospital_id
             and A.team_id = B.team_id
             and B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+            and not exists(select bprecord_id from bprecord
+            where bprecord.create_datetime > DATE_SUB(NOW(), INTERVAL 3 DAY )
+            and B.patient_id = bprecord.patient_id)
+        </if>
+        <if test="roleId == 5">
+            select count(distinct B.patient_id)
+            from patient AS B
+            where B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
             and not exists(select bprecord_id from bprecord
             where bprecord.create_datetime > DATE_SUB(NOW(), INTERVAL 3 DAY )
             and B.patient_id = bprecord.patient_id)

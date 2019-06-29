@@ -253,7 +253,6 @@
                 select dbp, sbp, dbp_target, sbp_target
                 from followup AS A inner join (
                 select patient_id, max(create_date) AS latestCreateDate from step.followup
-                where create_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)
                 group by patient_id
                 ) AS B
                 on A.patient_id = B.patient_id and A.create_date = B.latestCreateDate
@@ -273,7 +272,6 @@
                 select dbp, sbp, dbp_target, sbp_target
                 from followup AS A inner join (
                 select patient_id, max(create_date) AS latestCreateDate from step.followup
-                where create_date > DATE_SUB(NOW(), INTERVAL 1 MONTH)
                 group by patient_id
                 ) AS B
                 on A.patient_id = B.patient_id and A.create_date = B.latestCreateDate
@@ -283,6 +281,22 @@
                 where A.sbp_target is not null
                 and A.dbp_target is not null
                 and E.admin_id = #{userId}
+            ) AS C
+        </if>
+        <if test="roleId == 5">
+            select
+            count(case when C.dbp <![CDATA[ < ]]> C.dbp_target and C.sbp <![CDATA[ < ]]> C.sbp_target then 1 else null end) AS numValid,
+            count(case when C.dbp <![CDATA[ >= ]]> C.dbp_target or C.sbp <![CDATA[ >= ]]> C.sbp_target then 1 else null end) AS numInValid
+            from
+            (
+            select dbp, sbp, dbp_target, sbp_target
+            from followup AS A inner join (
+            select patient_id, max(create_date) AS latestCreateDate from step.followup
+            group by patient_id
+            ) AS B
+            on A.patient_id = B.patient_id and A.create_date = B.latestCreateDate
+            where A.sbp_target is not null
+            and A.dbp_target is not null
             ) AS C
         </if>
     </select>
