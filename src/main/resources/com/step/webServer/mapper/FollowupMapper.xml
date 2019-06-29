@@ -235,7 +235,7 @@
         select patient_name, gender, age, prc_id, next_confirmed from
                      step.followup AS A left join step.patient AS B
                        on A.patient_id = B.patient_id
-        where DATE(next_datetime) = CAST(#{nextDate} AS DATE)
+        where DATE(next_datetime) = #{nextDate}
     </select>
     <select id="getPatientsLatestFollowup" resultType="followup">
         select * from step.followup
