@@ -232,10 +232,26 @@
         order by create_date desc
     </select>
     <select id="followupPlan" resultType="map">
-        select patient_name, gender, age, prc_id, next_confirmed from
-                     step.followup AS A left join step.patient AS B
-                       on A.patient_id = B.patient_id
-        where DATE(next_datetime) = #{nextDate}
+        select distinct B.patient_name,
+                        B.gender,
+                        B.age,
+                        B.prc_id,
+                        A.next_confirmed
+        from followup AS A,
+             patient AS B,
+             user AS C,
+             hospital AS D
+        where A.patient_id = B.patient_id
+            and DATE(next_datetime) = #{nextDate}
+        <if test="roleId == 1 || roleId == 2">
+            and B.team_id = C.team_id
+            and C.user_id = #{userId}
+        </if>
+        <if test="roleId == 3">
+            and D.admin_id = #{userId}
+            and C.hospital_id = D.hospital_id
+            and B.team_id = C.team_id
+        </if>
     </select>
     <select id="getPatientsLatestFollowup" resultType="followup">
         select * from step.followup

@@ -116,8 +116,13 @@ public class FollowupDao implements Dao {
         return this.sqlSession.insert("insertPracticerxFollowup", practicerxFollowup);
     }
 
-    public List<Map<String, Object>> followupPlan(String nextDate) {
-        return this.sqlSession.selectList("followupPlan", nextDate);
+    public List<Map<String, Object>> followupPlan(String nextDate, int userId, int roleId) {
+        Map<String, Object> map = mapFactory.create();
+        map.put("nextDate", nextDate);
+        map.put("userId", userId);
+        map.put("roleId", roleId);
+
+        return this.sqlSession.selectList("followupPlan", map);
     }
 
     public Followup getPatientsLatestFollowup(String patientId) {

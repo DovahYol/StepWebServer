@@ -8,6 +8,7 @@ import com.step.webServer.domain.RiskfactorFollowup;
 import com.step.webServer.model.*;
 import com.step.webServer.util.MapFactory;
 import com.step.webServer.util.ResponseError;
+import com.step.webServer.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -330,8 +331,10 @@ public class FollowupController extends AbstractController {
 
     @GetMapping("/plan")
     public Object plan(String nextDate) {
+        int userId = (int) request.getSession().getAttribute(SessionUtil.USER_ID);
+        int roleId = (int) request.getSession().getAttribute(SessionUtil.ROLE_ID);
         Map<String, Object> map = mapFactory.create();
-        map.put("followups", followupDao.followupPlan(nextDate));
+        map.put("followups", followupDao.followupPlan(nextDate, userId, roleId));
         responseBuilder.setMap(map);
         return responseBuilder.getJson();
     }
