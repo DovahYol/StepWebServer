@@ -5,6 +5,7 @@ import com.step.webServer.dao.TeamDao;
 import com.step.webServer.dao.UserDao;
 import com.step.webServer.domain.ApplicationUser;
 import com.step.webServer.domain.Hospital;
+import com.step.webServer.domain.Team;
 import com.step.webServer.model.UserModel;
 import com.step.webServer.service.FileService;
 import com.step.webServer.util.MapFactory;
@@ -70,7 +71,8 @@ public class UserController extends AbstractController{
         map.put("position", applicationUser.getPosition());
         map.put("licenseId", applicationUser.getLicenseId());
         map.put("phoneNo", applicationUser.getPhoneNo());
-        map.put("teamName", teamDao.teamById(applicationUser.getTeamId()).getTeamName());
+        Team team = teamDao.teamById(applicationUser.getTeamId());
+        map.put("teamName", team == null ? "" : team.getTeamName());
         responseBuilder.setMap(map);
         return responseBuilder.getJson();
     }
