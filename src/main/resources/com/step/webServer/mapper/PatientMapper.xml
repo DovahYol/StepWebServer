@@ -138,6 +138,7 @@
     </sql>
     <select id="selectAllPatients" resultType="map">
         select
+               distinct
                C.patient_id AS patientId,
                C.patient_name AS patientName,
                C.gender,
@@ -151,7 +152,7 @@
                 A.gender,
                 A.age,
                 A.prc_id
-            from patient AS A
+            from patient AS A, hospital AS B, user AS C
             where 1 and 1
             <if test="keyword != null and keyword != ''">
                 and (
@@ -181,6 +182,15 @@
                     or
                     bprecord.sbp > C.sbp_target)
                 )
+            </if>
+            <if test="roleId == 1 || roleId == 2">
+                and C.team_id = A.team_id
+                and C.user_id = #{userId}
+            </if>
+            <if test="roleId == 3">
+                and B.admin_id = #{userId}
+                and C.hospital_id = B.hospital_id
+                and A.team_id = C.team_id
             </if>
         ) AS C left join (<include refid="latestHomeBp"/>) as D using(patient_id)
 

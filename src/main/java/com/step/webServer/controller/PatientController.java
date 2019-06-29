@@ -11,6 +11,7 @@ import com.step.webServer.model.PatientAddingModel;
 import com.step.webServer.model.PatientUpdateModel;
 import com.step.webServer.util.MapFactory;
 import com.step.webServer.util.ResponseErrorFactory;
+import com.step.webServer.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
@@ -61,6 +62,8 @@ public class PatientController extends AbstractController{
     @GetMapping
     public Object getAllPatients(String keyword, int pageNum, int pageSize, String orderBy, boolean isAsc, String queryType) throws JsonProcessingException {
         String username = (String)request.getSession().getAttribute("username");
+        int userId = (int)request.getSession().getAttribute(SessionUtil.USER_ID);
+        int roleId = (int)request.getSession().getAttribute(SessionUtil.ROLE_ID);
         String direction = isAsc? " asc" : " desc";
         if("patientId".equals(orderBy)) {
             orderBy = "patient_id" + direction;
@@ -79,6 +82,8 @@ public class PatientController extends AbstractController{
         map.put("username", username);
         map.put("keyword", keyword);
         map.put("queryType", queryType);
+        map.put("roleId", roleId);
+        map.put("userId", userId);
         List<Object> ret = patientDao.selectAllPatients(pageNum, pageSize, orderBy, map);
         Map<String, Object> responseMap = mapFactory.create();
         responseMap.put("patients", ret.get(0));
