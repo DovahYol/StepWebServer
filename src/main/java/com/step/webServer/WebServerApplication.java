@@ -38,7 +38,7 @@ public WebMvcConfigurer corsConfigurer() {
 	return new WebMvcConfigurerAdapter() {
 		@Override
 		public void addInterceptors(InterceptorRegistry registry) {
-			registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/signup", "/login");
+			registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/signup", "/login", "/hospital");
 		}
 
 		@Override
