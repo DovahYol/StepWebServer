@@ -43,6 +43,10 @@ public class AuthController extends AbstractController{
             ResponseError error = new ResponseError("待定", "登录密码不正确");
             responseBuilder.setError(error);
             return responseBuilder.getJson();
+        }else if (!appUser.getConfirmed()) {
+            ResponseError error = new ResponseError("待定", "账号尚未通过审核！");
+            responseBuilder.setError(error);
+            return responseBuilder.getJson();
         }
         request.getSession().setAttribute(SessionUtil.USERNAME, username);
         request.getSession().setAttribute(SessionUtil.USER_ID, appUser.getUserId());

@@ -112,6 +112,11 @@
                prc_id AS prcId
         from user left join step.role using(role_id)
         where confirmed = false
+        and hospital_id in
+            (
+              select hospital_id from step.hospital
+              where admin_id = #{userId}
+              )
     </select>
     <update id="updateConfirmed">
         update user set confirmed = #{confirmed}

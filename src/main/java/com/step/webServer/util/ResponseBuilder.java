@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * https://stackoverflow.com/questions/14371335/spring-scoped-proxy-bean
@@ -24,6 +25,7 @@ public class ResponseBuilder {
     private Map<String, Object> map;
 
     public ResponseBuilder(@Autowired ObjectMapper objectMapper){
+        objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         this.objectMapper = objectMapper;
     }
 

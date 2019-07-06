@@ -10,6 +10,7 @@ import com.step.webServer.model.UserModel;
 import com.step.webServer.service.FileService;
 import com.step.webServer.util.MapFactory;
 import com.step.webServer.util.ResponseError;
+import com.step.webServer.util.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
@@ -121,8 +122,9 @@ public class UserController extends AbstractController{
 
     @GetMapping("/unconfirmed")
     public Object unconfirmed() {
+        Integer userId = (Integer)request.getSession().getAttribute(SessionUtil.USER_ID);
         Map<String, Object> map = mapFactory.create();
-        map.put("reviews", userDao.getUnconfirmed());
+        map.put("reviews", userDao.getUnconfirmed(userId));
         responseBuilder.setMap(map);
         return responseBuilder.getJson();
     }

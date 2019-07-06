@@ -54,8 +54,8 @@ public class UserDao implements Dao{
         return this.sqlSession.selectList("nursesAvailable");
     }
 
-    public List<Map<String, Object>> getUnconfirmed() {
-        return this.sqlSession.selectList("getUnconfirmed");
+    public List<Map<String, Object>> getUnconfirmed(Integer userId) {
+        return this.sqlSession.selectList("getUnconfirmed", userId);
     }
 
     public int updateConfirmed(boolean confirmed, int userId) {
