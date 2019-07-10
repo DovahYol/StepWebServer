@@ -1,5 +1,6 @@
 package com.step.webServer;
 
+import com.step.webServer.intercepror.AndroidLoginInterceptor;
 import com.step.webServer.intercepror.LoginInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,7 +39,8 @@ public WebMvcConfigurer corsConfigurer() {
 	return new WebMvcConfigurerAdapter() {
 		@Override
 		public void addInterceptors(InterceptorRegistry registry) {
-			registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/signup", "/login", "/hospital");
+			registry.addInterceptor(new AndroidLoginInterceptor()).addPathPatterns("/api/**").excludePathPatterns("/api/login");
+			registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/signup", "/login", "/hospital", "/api/**", "/error");
 		}
 
 		@Override

@@ -26,6 +26,10 @@ public class UserDao implements Dao{
         return this.sqlSession.selectOne("selectByUsername", username);
     }
 
+    public ApplicationUser selectByPrcId(String prcId) {
+        return this.sqlSession.selectOne("selectByPrcId", prcId);
+    }
+
     public int insertOne(ApplicationUser user) {
         return this.sqlSession.insert("insertOne", user);
     }

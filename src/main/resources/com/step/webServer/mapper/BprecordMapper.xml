@@ -86,4 +86,12 @@
                 #{patientId}
             )
     </insert>
+    <select id="getBpRecordsByPrcId" resultType="map">
+        select
+               create_datetime AS createDatetime,
+               sbp,
+               dbp,
+               meas_state AS measState
+        from bprecord;
+    </select>
 </mapper>

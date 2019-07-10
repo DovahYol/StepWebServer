@@ -239,6 +239,9 @@
     <select id="getPatientById" resultType="patient">
         select * from patient where patient_id = #{patientId}
     </select>
+    <select id="getPatientByPrcId" resultType="patient">
+        select * from patient where prc_id = #{prcId}
+    </select>
     
     <select id="getRiskFactorClassCount" resultType="map">
         select C.riskfactorclass_id AS riskfactorclassId,

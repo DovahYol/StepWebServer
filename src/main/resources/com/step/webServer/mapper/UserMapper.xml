@@ -16,6 +16,9 @@
     <select id="selectByUsername" resultType="User">
         select * from user where username = #{username}
     </select>
+    <select id="selectByPrcId" resultType="User">
+        select * from user where prc_id = #{prcId}
+    </select>
     <select id="selectUserIdByUsername" resultType="int">
         select user_id from user where username = #{username}
     </select>

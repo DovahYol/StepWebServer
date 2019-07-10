@@ -106,6 +106,10 @@ public class PatientDao implements Dao{
         return sqlSession.selectOne("getPatientById", patientId);
     }
 
+    public List<Patient> getPatientByPrcId(String prcId) {
+        return sqlSession.selectList("getPatientByPrcId", prcId);
+    }
+
     public List<Map<String, Long>> getRiskFactorClassCount(long followupId){
         return sqlSession.selectList("getRiskFactorClassCount", followupId);
     }

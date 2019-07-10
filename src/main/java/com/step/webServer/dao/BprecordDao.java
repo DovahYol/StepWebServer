@@ -35,4 +35,8 @@ public class BprecordDao implements Dao{
         return this.sqlSession.insert("insertOneBprecord", bprecord);
     }
 
+    public List<Map<String, Object>> getBpRecordsByPrcId(String prcId) {
+        return this.sqlSession.selectList("getBpRecordsByPrcId", prcId);
+    }
+
 }
