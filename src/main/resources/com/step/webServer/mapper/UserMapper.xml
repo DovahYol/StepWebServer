@@ -176,4 +176,11 @@
             hospital_id =  #{hospitalId},
             role_id =    #{roleId}
     </update>
+
+    <select id="getAdminIdByUserId" resultType="int">
+        select B.admin_id
+        from user AS A, hospital AS B
+        where A.hospital_id = B.hospital_id
+        and A.user_id = #{userId}
+    </select>
 </mapper>

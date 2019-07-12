@@ -72,4 +72,8 @@ public class UserDao implements Dao{
     public int insertOrUpdateOne(ApplicationUser user) {
         return this.sqlSession.update("insertOrUpdateOneUser", user);
     }
+
+    public Integer getAdminIdByUserId(int userId) {
+        return this.sqlSession.selectOne("getAdminIdByUserId", userId);
+    }
 }

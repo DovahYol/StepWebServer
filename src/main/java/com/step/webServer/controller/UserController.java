@@ -78,6 +78,32 @@ public class UserController extends AbstractController{
         return responseBuilder.getJson();
     }
 
+    @GetMapping("/managerInfo")
+    public Object managerInfo() {
+        int userId = (int) request.getSession().getAttribute("userId");
+        Integer adminId = userDao.getAdminIdByUserId(userId);
+        if (adminId == null) {
+            responseBuilder.setError(new ResponseError("待定", "没有所属管理者"));
+            return responseBuilder.getJson();
+        }
+        ApplicationUser applicationUser = userDao.selectByUserId(adminId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("username", applicationUser.getUsername());
+        map.put("password", applicationUser.getPassword());
+        map.put("gender", applicationUser.getGender());
+        map.put("birthday", applicationUser.getBirthday());
+        map.put("prcId", applicationUser.getPrcId());
+        map.put("hospitalId", applicationUser.getHospitalId());
+        map.put("department", applicationUser.getDepartment());
+        map.put("position", applicationUser.getPosition());
+        map.put("licenseId", applicationUser.getLicenseId());
+        map.put("phoneNo", applicationUser.getPhoneNo());
+        Team team = teamDao.teamById(applicationUser.getTeamId());
+        map.put("teamName", team == null ? "" : team.getTeamName());
+        responseBuilder.setMap(map);
+        return responseBuilder.getJson();
+    }
+
     @GetMapping(value = "/downloadMyPicture", produces = "application/octet-stream")
     public void downloadMyPicture(HttpServletResponse response) throws IOException {
         int userId = (int) request.getSession().getAttribute("userId");
