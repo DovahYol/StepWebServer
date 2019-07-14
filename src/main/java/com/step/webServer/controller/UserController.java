@@ -168,7 +168,8 @@ public class UserController extends AbstractController{
             String address,
             String username,
             String phoneNo,
-            String prcId) {
+            String prcId,
+            String password) {
 
         ApplicationUser applicationUser = userDao.selectByUsername(username);
         if (applicationUser == null) {
@@ -179,6 +180,7 @@ public class UserController extends AbstractController{
         applicationUser.setPrcId(prcId);
         applicationUser.setRoleId(3);
         applicationUser.setConfirmed(true);
+        applicationUser.setPassword(password);
         userDao.insertOrUpdateOne(applicationUser);
 
         Hospital hospital = hospitalDao.selectHospitalByAdminId(applicationUser.getUserId());
