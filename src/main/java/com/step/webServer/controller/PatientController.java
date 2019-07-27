@@ -13,6 +13,7 @@ import com.step.webServer.util.MapFactory;
 import com.step.webServer.util.ResponseErrorFactory;
 import com.step.webServer.util.SessionUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,11 +96,23 @@ public class PatientController extends AbstractController{
     @PostMapping("/add")
     @Transactional
     public Object addPatient(PatientAddingModel patientAddingModel) {
-        Patient patient = new Patient();
         if (patientAddingModel.getPatientName() == null) {
             responseBuilder.setError(responseErrorFactory.create("未定", "patientName为null"));
             return responseBuilder.getJson();
         }
+        if (patientAddingModel.getPrcId() != null) {
+            List<Patient> patients = patientDao.getPatientByPrcId(patientAddingModel.getPrcId() + "");
+            if (patients.size() != 0) {
+                responseBuilder.setError(responseErrorFactory.create("未定", "该身份证号所有人已存在"));
+                return responseBuilder.getJson();
+            }
+        }
+        if (Strings.isBlank(patientAddingModel.getPhoneNo())) {
+            responseBuilder.setError(responseErrorFactory.create("未定", "phoneNo为必须输入，这将成为患者的初始密码"));
+            return responseBuilder.getJson();
+        }
+        Patient patient = new Patient();
+        patient.setPassword(patientAddingModel.getPhoneNo());
         patient.setPatientName(patientAddingModel.getPatientName());
         patient.setCreateDatetime(LocalDateTime.now());
         if (StringUtils.isEmpty(patientAddingModel.getGender())) {

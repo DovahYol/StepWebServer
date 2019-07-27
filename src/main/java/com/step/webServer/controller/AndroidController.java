@@ -49,6 +49,11 @@ public class AndroidController extends AbstractController  {
         List<Patient> patientList = patientDao.getPatientByPrcId(prcId);
         if (patientList.size() > 0) {
             pt = patientList.get(0);
+            if (password != null && !password.equals(pt.getPassword())) {
+                ResponseError error = new ResponseError("待定", "密码错误");
+                responseBuilder.setError(error);
+                return responseBuilder.getJson();
+            }
         }
         if (pt == null) {
             ResponseError error = new ResponseError("待定", "患者不存在");
@@ -145,6 +150,24 @@ public class AndroidController extends AbstractController  {
         bprecord.setSymptom(model.getSymptom());
 
         bprecordDao.insertOne(bprecord);
+        return responseBuilder.getJson();
+    }
+
+    @PostMapping("/changePw")
+    public Object changePw(String prcId, String crtPw, String newPw) {
+        List<Patient> patientList = patientDao.getPatientByPrcId(prcId);
+        if (patientList.size() > 0) {
+            Patient pt = patientList.get(0);
+            if (crtPw == null || crtPw.equals(pt.getPassword())) {
+                patientDao.updatePw(prcId, crtPw, newPw);
+            }else {
+                ResponseError error = new ResponseError("待定", "密码不对");
+                responseBuilder.setError(error);
+            }
+        }else {
+            ResponseError error = new ResponseError("待定", "当前用户不存在");
+            responseBuilder.setError(error);
+        }
         return responseBuilder.getJson();
     }
 }

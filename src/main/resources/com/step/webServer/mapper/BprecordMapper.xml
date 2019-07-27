@@ -91,6 +91,8 @@
                create_datetime AS createDatetime,
                sbp,
                dbp,
+               pulse_rate AS pulseRate,
+               symptom,
                meas_state AS measState
         from bprecord;
     </select>

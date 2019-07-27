@@ -231,18 +231,25 @@
         and user_id = #{userId}
         order by create_date desc
     </select>
+    <sql id="isBlank">
+        <bind name="isBlank" value=":[@org.apache.commons.lang3.StringUtils@isBlank(#this)]" />
+    </sql>
     <select id="followupPlan" resultType="map">
+        <include refid="isBlank" />
         select distinct B.patient_name,
                         B.gender,
                         B.age,
                         B.prc_id,
-                        A.next_confirmed
+                        A.next_confirmed,
+                        DATE(next_datetime) AS date
         from followup AS A,
              patient AS B,
              user AS C,
              hospital AS D
         where A.patient_id = B.patient_id
+        <if test="#fn = isBlank, not(#fn(nextDate))">
             and DATE(next_datetime) = #{nextDate}
+        </if>
         <if test="roleId == 1 || roleId == 2">
             and B.team_id = C.team_id
             and C.user_id = #{userId}
@@ -252,6 +259,7 @@
             and C.hospital_id = D.hospital_id
             and B.team_id = C.team_id
         </if>
+        order by date desc
     </select>
     <select id="getPatientsLatestFollowup" resultType="followup">
         select * from step.followup

@@ -12,14 +12,14 @@
     <select id="membersByTeamId" resultType="map">
         select
                username,
-               position,
                user_id AS userId,
                age,
-               position,
+               B.role_name AS position,
                department,
                phone_no AS phoneNo
-        from step.user
+        from user AS A, role AS B
         where team_id = #{teamId}
+        and B.role_id = A.role_id
     </select>
     <select id="teams" resultType="map">
         select

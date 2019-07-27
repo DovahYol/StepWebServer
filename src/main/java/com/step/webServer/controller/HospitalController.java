@@ -57,13 +57,18 @@ public class HospitalController extends AbstractController{
         int userId = (int)request.getSession().getAttribute("userId");
         Hospital hospital = hospitalDao.selectHospitalByAdminId(userId);
         Map<String, Object> map = new HashMap<>();
-        if (hospital != null) {
-            map.put("address", hospital.getAddress());
-            map.put("hospitalName", hospital.getHospitalName());
-            responseBuilder.setMap(map);
-        } else {
-            responseBuilder.setError(new ResponseError("1", "没有你管理的医院"));
+        if (hospital == null) {
+            Integer adminId = userDao.getAdminIdByUserId(userId);
+            if (adminId == null) {
+                responseBuilder.setError(new ResponseError("1", "你不属于哪家医院"));
+                return responseBuilder.getJson();
+            }
+            hospital = hospitalDao.selectHospitalByAdminId(adminId);
         }
+
+        map.put("address", hospital.getAddress());
+        map.put("hospitalName", hospital.getHospitalName());
+        responseBuilder.setMap(map);
         return responseBuilder.getJson();
     }
 

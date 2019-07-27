@@ -28,6 +28,7 @@ public class Patient implements Domain {
     private LocalDate hbpDxDate;
     private double maxSbp;
     private double maxDbp;
+    private String password;
 
     public Integer getAge() {
         return age;
@@ -219,5 +220,13 @@ public class Patient implements Domain {
 
     public void setMaxDbp(double maxDbp) {
         this.maxDbp = maxDbp;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

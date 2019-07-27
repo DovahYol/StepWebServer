@@ -240,7 +240,8 @@
         select * from patient where patient_id = #{patientId}
     </select>
     <select id="getPatientByPrcId" resultType="patient">
-        select * from patient where prc_id = #{prcId}
+        select * from patient
+        where prc_id = #{prcId}
     </select>
     
     <select id="getRiskFactorClassCount" resultType="map">
@@ -282,5 +283,11 @@
             max_sbp = #{maxSbp},
             max_dbp = #{maxDbp}
         where patient_id = #{patientId}
+    </update>
+    <update id="updatePw">
+        update patient
+        set password = #{newPw}
+        where prc_id = #{prcId}
+        and password = #{crtPw}
     </update>
 </mapper>

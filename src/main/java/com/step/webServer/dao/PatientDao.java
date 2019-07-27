@@ -10,6 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -116,5 +117,14 @@ public class PatientDao implements Dao{
 
     public int updatePatient(PatientUpdateModel patient) {
         return sqlSession.update("updatePatient", patient);
+    }
+
+    public int updatePw(String prcId, String crtPw, String newPw) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("prcId", prcId);
+        params.put("crtPw", crtPw);
+        params.put("newPw", newPw);
+
+        return sqlSession.update("updatePw", params);
     }
 }
