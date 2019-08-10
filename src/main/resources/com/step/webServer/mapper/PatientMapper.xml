@@ -204,11 +204,11 @@
           (patient_name, create_datetime, gender, prc_id, birthday,
            marriage, ethnicity, degree_education, profession, address,
            phone_no, medical_insurance_type_id, emerg_cont_name,
-           emerg_cont_phone_no, emerg_cont_relationship, team_id, age, hbp_dx_date, max_sbp, max_dbp)
+           emerg_cont_phone_no, emerg_cont_relationship, team_id, age, hbp_dx_date, max_sbp, max_dbp, password)
            values (#{patientName}, #{createDatetime}, #{gender}, #{prcId}, #{birthday},
                    #{marriage}, #{ethnicity}, #{degreeEducation}, #{profession}, #{address},
                    #{phoneNo}, #{medicalInsuranceTypeId}, #{emergContName},
-                   #{emergContPhoneNo}, #{emergContRelationship}, #{teamId}, #{age}, #{hbpDxDate}, #{maxSbp}, #{maxDbp}
+                   #{emergContPhoneNo}, #{emergContRelationship}, #{teamId}, #{age}, #{hbpDxDate}, #{maxSbp}, #{maxDbp}, #{password}
                    )
     </insert>
     <select id="patientMeta" resultType="map">
