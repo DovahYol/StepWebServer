@@ -34,6 +34,15 @@
             team_name like concat('%', #{keyword}, '%')
             )
         </if>
+        <if test="roleId == 1 || roleId == 2">
+            and admin_id in
+                (select H.admin_id from user AS U, hospital AS H
+                where U.user_id = #{userId}
+                  and U.hospital_id = H.hospital_id)
+        </if>
+        <if test="roleId == 3">
+            and admin_id = #{userId}
+        </if>
         group by team_id, team_name, A.create_datetime
     </select>
 
@@ -46,6 +55,15 @@
             and (
             team_name like concat('%', #{keyword}, '%')
             )
+        </if>
+        <if test="roleId == 1 || roleId == 2">
+            and admin_id in
+            (select H.admin_id from user AS U, hospital AS H
+            where U.user_id = #{userId}
+            and U.hospital_id = H.hospital_id)
+        </if>
+        <if test="roleId == 3">
+            and admin_id = #{userId}
         </if>
     </select>
 

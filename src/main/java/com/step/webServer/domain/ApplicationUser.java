@@ -16,7 +16,7 @@ public class ApplicationUser implements Domain {
     private String phoneNo;
     private String picturePath;
     private Boolean confirmed;
-    private int teamId;
+    private Integer teamId;
     private Integer hospitalId;
     private Integer roleId;
 
@@ -140,11 +140,11 @@ public class ApplicationUser implements Domain {
         this.roleId = roleId;
     }
 
-    public int getTeamId() {
+    public Integer getTeamId() {
         return teamId;
     }
 
-    public void setTeamId(int teamId) {
+    public void setTeamId(Integer teamId) {
         this.teamId = teamId;
     }
 }

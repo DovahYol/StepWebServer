@@ -147,33 +147,33 @@
               RIGHT(C.prc_id, 6) AS prcNoTailSix from
         (
             select
-                A.patient_id,
-                A.patient_name,
-                A.gender,
-                A.age,
-                A.prc_id
-            from patient AS A, hospital AS B, user AS C
+                P.patient_id,
+                P.patient_name,
+                P.gender,
+                P.age,
+                P.prc_id
+            from patient AS P, hospital AS H, user AS U, team AS T
             where 1 and 1
             <if test="keyword != null and keyword != ''">
                 and (
-                A.patient_name like concat('%', #{keyword}, '%')
-                or A.phone_no like concat('%', #{keyword}, '%')
-                or A.prc_id like concat('%',#{keyword}, '%')
+                P.patient_name like concat('%', #{keyword}, '%')
+                or P.phone_no like concat('%', #{keyword}, '%')
+                or P.prc_id like concat('%',#{keyword}, '%')
                 )
             </if>
             <if test="queryType == 'newPatients'">
-                and create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                and P.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
             </if>
             <if test="queryType == 'newPatientsNotTested'">
-                and create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                and P.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
                 and not exists(
                   select bprecord_id from bprecord AS B
                   where B.create_datetime > DATE_SUB(NOW(), INTERVAL 3 DAY )
-                    and A.patient_id = B.patient_id
+                    and P.patient_id = B.patient_id
                   )
             </if>
             <if test="queryType == 'abnormal'">
-                and A.patient_id in (
+                and P.patient_id in (
                     select distinct bprecord.patient_id from bprecord,
                     (<include refid="bpTarget"/>) as C
                     where DATE(bprecord.create_datetime) = CURDATE()
@@ -184,13 +184,17 @@
                 )
             </if>
             <if test="roleId == 1 || roleId == 2">
-                and C.team_id = A.team_id
-                and C.user_id = #{userId}
+                and P.team_id = T.team_id
+                and T.admin_id in
+                    (
+                      select Y.admin_id from user AS X, hospital AS Y
+                      where X.user_id = #{userId}
+                        and X.hospital_id = Y.hospital_id
+                      )
             </if>
             <if test="roleId == 3">
-                and B.admin_id = #{userId}
-                and C.hospital_id = B.hospital_id
-                and A.team_id = C.team_id
+                and P.team_id = T.team_id
+                and T.admin_id = #{userId}
             </if>
         ) AS C left join (<include refid="latestHomeBp"/>) as D using(patient_id)
 
@@ -232,6 +236,30 @@
         select count(*) from patient as A, team as B
         where A.team_id = B.team_id
         and B.admin_id = #{adminId}
+    </select>
+    <select id="getValidPatientByAdminId" resultType="int">
+        select count(*) from patient as A, team as B
+        where A.team_id = B.team_id
+          and B.admin_id = #{adminId}
+          and
+            (exists
+                (select * from followup AS F1,
+                               (select patient_id, max(create_date) AS latestCreateDate from followup
+                                group by patient_id) AS F2
+                 where A.patient_id = F1.patient_id
+                   and F1.patient_id = F2.patient_id
+                   and F1.create_date = latestCreateDate
+                   and F1.dbp <![CDATA[ < ]]> F1.dbp_target
+                   and F1.sbp <![CDATA[ < ]]> F1.sbp_target
+                )
+              or not
+             (exists
+                 (select * from followup AS F1
+                  where A.patient_id = F1.patient_id
+                 )
+              )
+              )
+
     </select>
     <select id="getPatientIdsByTeamId" resultType="int">
         select patient_id from step.patient where team_id = #{teamId}

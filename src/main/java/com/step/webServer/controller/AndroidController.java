@@ -69,8 +69,9 @@ public class AndroidController extends AbstractController  {
         map.put("address", pt.getAddress());
         map.put("phoneNo", pt.getPhoneNo());
         map.put("stepDay", DAYS.between(pt.getCreateDatetime().toLocalDate(), LocalDate.now()));
-        map.put("sbpTarget", 140);
-        map.put("dbpTarget", 90);
+        Followup fl = followupDao.getPatientsLatestFollowup(pt.getPatientId() + "");
+        map.put("sbpTarget", fl.getSbpTarget());
+        map.put("dbpTarget", fl.getDbpTarget());
 
         Followup followup = followupDao.getPatientsLatestFollowup(pt.getPatientId() + "");
         if (followup != null) {

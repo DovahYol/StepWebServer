@@ -109,6 +109,7 @@ public class AuthController extends AbstractController{
         applicationUser.setHospitalId(hospitalIdInt);
         applicationUser.setRoleId(roleIdInt);
         applicationUser.setConfirmed(false);
+        applicationUser.setTeamId(null);
 
         if (userDao.containsUser(userModel.getUsername())) {
             ResponseError error = new ResponseError("未定","该用户已存在");

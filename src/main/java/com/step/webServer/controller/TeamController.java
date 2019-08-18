@@ -7,6 +7,7 @@ import com.step.webServer.domain.Team;
 import com.step.webServer.model.TeamAddMemberModel;
 import com.step.webServer.model.TeamCreateModel;
 import com.step.webServer.util.MapFactory;
+import com.step.webServer.util.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -46,10 +47,13 @@ public class TeamController extends AbstractController  {
         }else {
             orderBy = null;
         }
-        List<Map<String, Object>> teams = teamDao.teams(pageNum, pageSize, orderBy, keyword);
+        int userId = (int) request.getSession().getAttribute(SessionUtil.USER_ID);
+        int roleId = (int) request.getSession().getAttribute(SessionUtil.ROLE_ID);
+
+        List<Map<String, Object>> teams = teamDao.teams(pageNum, pageSize, orderBy, keyword, userId, roleId);
         Map<String, Object> responseMap = mapFactory.create();
         responseMap.put("teams", teams);
-        responseMap.put("count", teamDao.teamTotalNum(keyword));
+        responseMap.put("count", teamDao.teamTotalNum(keyword, userId, roleId));
         responseBuilder.setMap(responseMap);
         return responseBuilder.getJson();
     }

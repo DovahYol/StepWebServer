@@ -123,8 +123,13 @@ public class HospitalController extends AbstractController{
 
                 int teamNum = teamDao.getTeamNumByAdminId(user.getUserId());
                 int patientNum = patientDao.getPatientNumByAdminId(user.getUserId());
-                int validNum = 10;
-                String validRate = "5%";
+                int validNum = patientDao.getValidPatientByAdminId(user.getUserId());
+                String validRate =
+                        patientNum != 0
+                                ?
+                                ((float)validNum / (float)patientNum) * 100 + "%"
+                                :
+                                "100%";
 
                 hospitalInfoModel.setTeamsNum(teamNum);
                 hospitalInfoModel.setPatientNum(patientNum);

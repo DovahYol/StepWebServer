@@ -27,7 +27,7 @@ public class TeamDao implements Dao  {
         return this.sqlSession.selectList("membersByTeamId", teamId);
     }
 
-    public List<Map<String, Object>> teams(int pageNum, int pageSize, String orderBy, String keyword) {
+    public List<Map<String, Object>> teams(int pageNum, int pageSize, String orderBy, String keyword, int userId, int roleId) {
         if (orderBy != null) {
             PageHelper.startPage(pageNum, pageSize, orderBy);
         }
@@ -37,6 +37,8 @@ public class TeamDao implements Dao  {
 
         Map<String, Object> params = mapFactory.create();
         params.put("keyword", keyword);
+        params.put("userId", userId);
+        params.put("roleId", roleId);
 
         List<Map<String, Object>> teams = sqlSession.selectList("teams", params);
         for (int i = 0; i < teams.size(); i++) {
@@ -49,9 +51,11 @@ public class TeamDao implements Dao  {
         return teams;
     }
 
-    public int teamTotalNum(String keyword) {
+    public int teamTotalNum(String keyword, int userId, int roleId) {
         Map<String, Object> params = mapFactory.create();
         params.put("keyword", keyword);
+        params.put("userId", userId);
+        params.put("roleId", roleId);
 
         return this.sqlSession.selectOne("teamTotalNum", params);
     }
