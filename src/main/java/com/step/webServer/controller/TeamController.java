@@ -138,12 +138,14 @@ public class TeamController extends AbstractController  {
 
     @GetMapping("/usersAvailable")
     public Object usersAvailable(String type) {
+        int userId = (int) request.getSession().getAttribute(SessionUtil.USER_ID);
+        int roleId = (int) request.getSession().getAttribute(SessionUtil.ROLE_ID);
         Map<String, Object> params = mapFactory.create();
         if ("doctor".equals(type)) {
-            List<Map<String, Object>> local = userDao.doctorsAvailable();
+            List<Map<String, Object>> local = userDao.doctorsAvailable(userId, roleId);
             params.put("users", local);
         } else if ("nurse".equals(type)) {
-            List<Map<String, Object>> local = userDao.nursesAvailable();
+            List<Map<String, Object>> local = userDao.nursesAvailable(userId, roleId);
             params.put("users", local);
         }
         responseBuilder.setMap(params);

@@ -5,6 +5,7 @@ import com.step.webServer.util.MapFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,12 +51,18 @@ public class UserDao implements Dao{
         return this.sqlSession.update("updateOne", applicationUser);
     }
 
-    public List<Map<String, Object>> doctorsAvailable() {
-        return this.sqlSession.selectList("doctorsAvailable");
+    public List<Map<String, Object>> doctorsAvailable(int userId, int roleId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("roleId", roleId);
+        return this.sqlSession.selectList("doctorsAvailable", params);
     }
 
-    public List<Map<String, Object>> nursesAvailable() {
-        return this.sqlSession.selectList("nursesAvailable");
+    public List<Map<String, Object>> nursesAvailable(int userId, int roleId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("roleId", roleId);
+        return this.sqlSession.selectList("nursesAvailable", params);
     }
 
     public List<Map<String, Object>> getUnconfirmed(Integer userId) {
