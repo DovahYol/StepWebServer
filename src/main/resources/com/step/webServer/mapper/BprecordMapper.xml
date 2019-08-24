@@ -88,12 +88,14 @@
     </insert>
     <select id="getBpRecordsByPrcId" resultType="map">
         select
-               create_datetime AS createDatetime,
+               B.create_datetime AS createDatetime,
                sbp,
                dbp,
                pulse_rate AS pulseRate,
                symptom,
                meas_state AS measState
-        from bprecord;
+        from bprecord AS B, patient AS P
+        where B.patient_id = P.patient_id
+        and P.prc_id = #{prcId}
     </select>
 </mapper>
