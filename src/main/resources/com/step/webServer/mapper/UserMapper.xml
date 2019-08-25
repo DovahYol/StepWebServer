@@ -83,7 +83,7 @@
     </update>
     
     <select id="doctorsAvailable" resultType="map">
-        select user_id, username from user AS U, team AS T
+        select user_id, username from user AS U, hospital AS H
         where role_id = 1
             and (
                 U.team_id is null
@@ -92,12 +92,12 @@
                 )
             and confirmed is not null
             and confirmed = true
-            and U.team_id = T.team_id
-            and T.admin_id = #{userId}
+            and U.hospital_id = H.hospital_id
+            and H.admin_id = #{userId}
     </select>
 
     <select id="nursesAvailable" resultType="map">
-        select user_id, username from user AS U, team AS T
+        select user_id, username from user AS U, hospital AS H
         where role_id = 2
           and (
                 U.team_id is null
@@ -106,8 +106,8 @@
             )
           and confirmed is not null
           and confirmed = true
-          and U.team_id = T.team_id
-          and T.admin_id = #{userId}
+          and U.hospital_id = H.hospital_id
+          and H.admin_id = #{userId}
     </select>
     <select id="getUnconfirmed" resultType="map">
         select
