@@ -30,6 +30,11 @@ public class HospitalDao implements Dao{
         return sqlSession.selectOne("selectHospitalByHospitalId", hospitalId);
     }
 
+    public Hospital selectHospitalByHospitalName(String hospitalName) {
+        return sqlSession.selectOne("selectHospitalByHospitalName", hospitalName);
+    }
+
+
     public int updateHospitalByAdminId(Hospital hospital) {
         return sqlSession.update("updateHospitalByAdminId", hospital);
     }

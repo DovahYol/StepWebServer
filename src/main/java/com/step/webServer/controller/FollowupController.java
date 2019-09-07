@@ -125,7 +125,7 @@ public class FollowupController extends AbstractController {
         int userId = (int)request.getSession().getAttribute("userId");
         Map<String, Object> map = mapFactory.create();
         responseBuilder.setMap(map);
-        map.put("allDateAndFollowupIds", followupDao.allDateAndFollowupIds(patientId, userId));
+        map.put("allDateAndFollowupIds", followupDao.allDateAndFollowupIds(patientId));
         return responseBuilder.getJson();
     }
 

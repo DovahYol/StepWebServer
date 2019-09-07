@@ -183,7 +183,13 @@ public class UserController extends AbstractController{
         applicationUser.setPassword(password);
         userDao.insertOrUpdateOne(applicationUser);
 
-        Hospital hospital = hospitalDao.selectHospitalByAdminId(applicationUser.getUserId());
+        Hospital hospital = hospitalDao.selectHospitalByHospitalName(hospitalName);
+        if (hospital != null) {
+            responseBuilder.setError(new ResponseError("待定", "这个医院名字已经被占有了"));
+            return responseBuilder.getJson();
+        }
+
+        hospital = hospitalDao.selectHospitalByAdminId(applicationUser.getUserId());
         if (hospital == null) {
             hospital = new Hospital();
         }

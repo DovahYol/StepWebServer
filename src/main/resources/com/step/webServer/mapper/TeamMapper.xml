@@ -26,7 +26,7 @@
           team_id AS teamId,
           team_name AS teamName,
           A.create_datetime AS createDatetime,
-          count(*) AS numMgtPatient
+          count(distinct patient_id) AS numMgtPatient
         from step.team AS A left join step.patient using(team_id)
         where 1
         <if test="keyword != null and keyword != ''">

@@ -45,10 +45,9 @@ public class FollowupDao implements Dao {
         return this.sqlSession.selectOne("exam", followupId);
     }
 
-    public List<Map<String, Object>> allDateAndFollowupIds(String patientId, int userId) {
+    public List<Map<String, Object>> allDateAndFollowupIds(String patientId) {
         Map<String, Object> params = mapFactory.create();
         params.put("patientId", patientId);
-        params.put("userId", userId);
         return this.sqlSession.selectList("allDateAndFollowupIds", params);
     }
 

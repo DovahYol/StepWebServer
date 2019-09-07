@@ -21,6 +21,10 @@
         select * from step.hospital
         where hospital_id = #{hospitalId}
     </select>
+    <select id="selectHospitalByHospitalName" resultType="hospital">
+        select * from step.hospital
+        where hospital_name = #{hospitalName}
+    </select>
     <update id="updateHospitalByAdminId">
         update step.hospital
         set step.hospital.address = #{address},

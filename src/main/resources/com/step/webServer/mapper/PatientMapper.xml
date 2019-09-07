@@ -6,33 +6,33 @@
     <cache-ref namespace="com.step.webServer.mapper" />
     <select id="numPatientsByUsername" resultType="java.lang.Integer">
         <if test="roleId == 1 || roleId == 2">
-            select count(*)
+            select count(distinct patient_id)
             from user AS A, patient AS B
             where A.team_id = B.team_id
             and A.user_id = #{userId}
         </if>
         <if test="roleId == 3">
-            select count(*)
+            select count(distinct patient_id)
             from user AS A, patient AS B, step.hospital AS C
             where C.admin_id = #{userId}
             and C.hospital_id = A.hospital_id
             and A.team_id = B.team_id
         </if>
         <if test="roleId == 5">
-            select count(*)
+            select count(distinct patient_id)
             from patient
         </if>
     </select>
     <select id="numNewPatientsByUsername" resultType="java.lang.Integer">
         <if test="roleId == 1 || roleId == 2">
-            select count(*)
+            select count(distinct patient_id)
             from user AS A, patient AS B
             where A.team_id = B.team_id
             and A.user_id = #{userId}
             and B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
         </if>
         <if test="roleId == 3">
-            select count(*)
+            select count(distinct patient_id)
             from user AS A, patient AS B, step.hospital AS C
             where C.admin_id = #{userId}
             and C.hospital_id = A.hospital_id
@@ -40,7 +40,7 @@
             and B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
         </if>
         <if test="roleId == 5">
-            select count(*)
+            select count(distinct patient_id)
             from patient AS B
             where B.create_datetime > DATE_SUB(NOW(), INTERVAL 1 MONTH)
         </if>
