@@ -19,7 +19,7 @@ public class TeamDao implements Dao  {
         this.mapFactory = mapFactory;
     }
 
-    public Team teamById(int teamId) {
+    public Team teamById(Integer teamId) {
         return this.sqlSession.selectOne("teamById", teamId);
     }
 
