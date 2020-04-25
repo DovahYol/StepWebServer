@@ -168,13 +168,15 @@ public class UserController extends AbstractController{
             String address,
             String username,
             String phoneNo,
-            String prcId) {
+            String prcId,
+            String password) {
 
         ApplicationUser applicationUser = userDao.selectByUsername(username);
         if (applicationUser == null) {
             applicationUser = new ApplicationUser();
         }
         applicationUser.setUsername(username);
+        applicationUser.setPassword(password);
         applicationUser.setPhoneNo(phoneNo);
         applicationUser.setPrcId(prcId);
         applicationUser.setRoleId(3);
