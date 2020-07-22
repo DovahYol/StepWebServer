@@ -48,9 +48,11 @@ public class AuthController extends AbstractController{
             responseBuilder.setError(error);
             return responseBuilder.getJson();
         }
+        Integer adminId = userDao.getAdminIdByUserId(appUser.getUserId());
         request.getSession().setAttribute(SessionUtil.USERNAME, username);
         request.getSession().setAttribute(SessionUtil.USER_ID, appUser.getUserId());
         request.getSession().setAttribute(SessionUtil.ROLE_ID, appUser.getRoleId());
+        request.getSession().setAttribute(SessionUtil.ADMIN_ID, adminId);
         return responseBuilder.getJson();
     }
 

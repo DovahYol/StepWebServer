@@ -188,7 +188,7 @@ public class TeamController extends AbstractController  {
         int userId = (int) request.getSession().getAttribute("userId");
         Map<String, Object> params = mapFactory.create();
         params.put("teamName", teamName);
-        params.put("adminId", userId);
+        params.put("adminId", request.getSession().getAttribute(SessionUtil.ADMIN_ID));
         params.put("teamId", null);
         teamDao.insertTeam(params);
         params.remove("teamName");

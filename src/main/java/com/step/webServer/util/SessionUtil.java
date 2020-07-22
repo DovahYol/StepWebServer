@@ -8,6 +8,8 @@ public class SessionUtil {
 
     public final static String ROLE_ID = "roleId";
 
+    public final static String ADMIN_ID = "adminId";
+
     public final static String PATIENT_PRC_ID = "patientPrcId";
 
     public final static String PATIENT_ID = "patientId";
